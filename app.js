@@ -66,6 +66,7 @@ app.get('/', (req, res) => {
 
 // route vers le dashboard admin
 app.get('/admin', (req, res) => {
+    // comment vérifier dans le cache que le client est admin avant d'arriver ici ??
     // requête pour récupérer les données de tous les utilisateurs
     let queryAllUsers = "SELECT user_pseudo AS Pseudo, name AS Nom, prenom AS Prénom, tel AS Téléphone, taille AS Taille, poids AS Poids, objectif AS Objectif, pass AS MDP, autorisation AS Droits FROM user;";
     // connexion à la BDD
@@ -127,7 +128,7 @@ app.post('/confirm', (req,res) => {
                 // on va enregistrer l'utilisateur dans le cache local
                 let userStorage = {
                     'username': name,
-                    'rights': results.autorisation
+                    'rights': 'user'
                 }
                 // on évalue le statut de l'utilisateur
                 if (results[0].autorisation == 'admin'){
@@ -138,9 +139,6 @@ app.post('/confirm', (req,res) => {
                     'message': `Welcome ${name}`,
                     'storage': userStorage
                 });
-                // enregistrer l'utilisateur dans le local storage côté serveur est impossible...
-                // localStorage.setItem('loggedInUser', JSON.stringify(userStorage));
-                // res.redirect('accueil_game');
             }  else if (results.length > 1 ) {
                 res.render('sport_login', { 'title': 'Login', 'message' : 'Multiple user' });
             } else {

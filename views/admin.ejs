@@ -21,16 +21,20 @@
             <% fields.forEach(field => { %>
               <th><%= field %></th>
             <% }); %>
+              <th>Action</th>
           </tr>
           <tbody>
-              <!-- On boucle dans les utilisateurs pour remplir la table -->
-              <% results.forEach(user => { %>
-              <!-- On autorise la modification directe du contenu de la table -->
-               <tr contenteditable="true">
-                  <!-- On boucle dans les champs utilisateurs selon le nom des champs -->
-                  <% fields.forEach(field => { %>
-                    <td><%= user[field] %></td>
-                  <% }); %>
+            <!-- On boucle dans les utilisateurs pour remplir la table -->
+            <% results.forEach(user => { %>
+            <!-- On autorise la modification directe du contenu de la table -->
+              <tr contenteditable="true">
+                <!-- On boucle dans les champs utilisateurs selon le nom des champs -->
+                <% fields.forEach(field => { %>
+                  <td><%= user[field] %></td>
+                <% }); %>
+                <!-- Bouton d'action pour l'admin -->
+                <td><button>Supprimer</button></td>
+                <td><button>Màj</button></td>
               <% }); %>
             </tr>
           </tbody>
