@@ -126,13 +126,13 @@ app.post('/confirm', (req,res) => {
             if(results.length == 1){
                 // on va enregistrer l'utilisateur dans le cache local
                 let userStorage = {
-                    'username': results.user_pseudo,
+                    'username': name,
                     'rights': results.autorisation
                 }
                 // on évalue le statut de l'utilisateur
                 if (results[0].autorisation == 'admin'){
                     // si c'est un admin, on change ses droits
-                    userStorage.rights = 'admin';
+                    userStorage['rights'] = 'admin';
                 }
                 res.render('welcome', { 'title': 'Accueil', 
                     'message': `Welcome ${name}`,
