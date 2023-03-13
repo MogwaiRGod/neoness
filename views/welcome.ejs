@@ -10,7 +10,9 @@
     <h1><%= message %></h1>
 
   <script>
+    // on récupère les données de l'utilisateur à enregistrer dans le cache
     let user = <%- JSON.stringify(storage) %>;
+    // on les envoie dans le local storage
     localStorage.setItem('loggedIn', JSON.stringify(user));
   </script>
 </body>
