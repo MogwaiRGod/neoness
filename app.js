@@ -15,7 +15,7 @@ const ejs = require('ejs');
  * CONSTANTES
  */
 // nom de la BDD
-const DB = ""; /* A REMPLIR */
+const DB = "neoness"; /* A REMPLIR */
 const HOST = '0.0.0.0';
 const PORT = 8080;
 
@@ -62,6 +62,27 @@ con.connect((err) => {
 // route test
 app.get('/', (req, res) => {
     res.send("Route fonctionnelle");
+});
+
+// route vers le dashboard admin
+app.get('/admin', (req, res) => {
+    // requête pour récupérer les données de tous les utilisateurs
+    let queryAllUsers = "SELECT * FROM user";
+    // connexion à la BDD
+    con.connect((err) => {
+        if (err) throw err;
+
+        // envoi de la requête
+        con.query(queryAllUsers, (err, results) => {
+            if (err) throw err;
+
+            console.log(results)
+        }); // fin con.query
+    }); // fin con.connect
+
+    res.render('admin', {
+        'title': "Dashboard admin"
+    });
 })
 
 
