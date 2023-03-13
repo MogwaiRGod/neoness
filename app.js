@@ -104,7 +104,6 @@ app.post('/sport_create_user', (req,res) => {
     con.connect((err)=>{
         if (err) throw err;
         con.query(myquery, [name, prenom, tel, poids, taille, objectif, pass, pseudo], (err,results)=>{
-            console.log(results);
             res.redirect('accueil_game')
         })
     })
@@ -125,11 +124,19 @@ app.post('/confirm', (req,res) => {
         con.query(myquery, [name, pass], function(err,results){
             if (err) throw err;
             if(results.length == 1){
-                res.render('sport_login', { 'title': 'Accueil', 'message': `Welcome ${name}`});
+                // on va enregistrer l'utilisateur dans le cache local
+                let userStorage = {
+                    'username': results.user_pseudo,
+                    'rights': results.autorisation
+                }
                 // on évalue le statut de l'utilisateur
                 if (results[0].autorisation == 'admin'){
-                    // si c'est un admin
+                    // si c'est un admin, on change ses droits
+                    userStorage.rights = 'admin';
                 }
+                res.render('sport_login', { 'title': 'Accueil', 'message': `Welcome ${name}`});
+                // enregistrer l'utilisateur dans le local storage côté serveur est impossible...
+                // localStorage.setItem('loggedInUser', JSON.stringify(userStorage));
                 // res.redirect('accueil_game');
             }  else if (results.length > 1 ) {
                 res.render('sport_login', { 'title': 'Login', 'message' : 'Multiple user' });

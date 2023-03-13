@@ -14,6 +14,11 @@
         <button id="connect">Log in</button>
    </form><br><br>
    <a href="/signin">Sign in</a>
-    
+    <script>
+        if (cache) {
+            console.log(cache)
+            localStorage.setItem('loggedUser', JSON.stringify(cache));
+        }
+    </script>
 </body>
 </html>
