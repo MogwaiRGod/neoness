@@ -61,7 +61,7 @@ con.connect((err) => {
 
 // route test
 app.get('/', (req, res) => {
-    res.send("Route fonctionnelle");
+    res.redirect('/sport_login');
 });
 
 // route vers le dashboard admin
@@ -119,7 +119,7 @@ app.post('/confirm', (req,res) => {
     console.log(req.body);
     let name = req.body.name;
     let pass = req.body.pass;
-    let myquery = "SELECT name FROM user WHERE name = ? AND pass = ? ";
+    let myquery = "SELECT user_pseudo FROM user WHERE user_pseudo = ? AND pass = ? ";
     con.connect(function(err){
         if (err) throw err;
         con.query(myquery, [name, pass], function(err,results){
