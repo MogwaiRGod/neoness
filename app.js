@@ -134,7 +134,10 @@ app.post('/confirm', (req,res) => {
                     // si c'est un admin, on change ses droits
                     userStorage.rights = 'admin';
                 }
-                res.render('sport_login', { 'title': 'Accueil', 'message': `Welcome ${name}`});
+                res.render('welcome', { 'title': 'Accueil', 
+                    'message': `Welcome ${name}`,
+                    'storage': userStorage
+                });
                 // enregistrer l'utilisateur dans le local storage côté serveur est impossible...
                 // localStorage.setItem('loggedInUser', JSON.stringify(userStorage));
                 // res.redirect('accueil_game');
