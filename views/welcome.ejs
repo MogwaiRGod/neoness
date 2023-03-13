@@ -8,7 +8,22 @@
 </head>
 <body>
     <h1><%= message %></h1>
-    <% console.log(results) %>
+    <table>
+        <!-- On réupère le nom des champs de la table use -->
+        <% const fields = Object.getOwnPropertyNames(results[0]); %>
+        <tr>
+        <!-- on boucle dans les champs pour écrire le header -->
+        <% fields.forEach(field => { %>
+          <th><%= field %></th>
+        <% }); %>
+      </tr>
+      <tbody>
+          <tr>
+            <!-- On boucle dans les champs utilisateurs selon le nom des champs -->
+            <% fields.forEach(field => { %>
+              <td><%= results[0][field] %></td>
+            <% }); %>
+    </table>
   <script>
     // on récupère les données de l'utilisateur à enregistrer dans le cache
     let user = <%- JSON.stringify(storage) %>;

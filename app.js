@@ -105,7 +105,7 @@ app.post('/sport_create_user', (req,res) => {
     con.connect((err)=>{
         if (err) throw err;
         con.query(myquery, [name, prenom, tel, poids, taille, objectif, pass, pseudo], (err,results)=>{
-            res.redirect('accueil_game')
+            res.redirect('/confirm')
         })
     })
 })
@@ -119,7 +119,7 @@ app.post('/confirm', (req,res) => {
     console.log(req.body);
     let name = req.body.name;
     let pass = req.body.pass;
-    let myquery = "SELECT *, autorisation FROM user WHERE user_pseudo = ? AND pass = ? ";
+    let myquery = "SELECT user_pseudo AS Username, name AS Nom, prenom AS Prénom, tel AS Téléphone, poids AS Poids, taille AS Taille, objectif AS Objectif, autorisation FROM user WHERE user_pseudo = ? AND pass = ? ";
     con.connect(function(err){
         if (err) throw err;
         con.query(myquery, [name, pass], function(err,results){
@@ -128,13 +128,15 @@ app.post('/confirm', (req,res) => {
                 // on va enregistrer l'utilisateur dans le cache local
                 let userStorage = {
                     'username': name,
-                    'rights': results[0].user
+                    'rights': results[0].autorisation
                 }
                 // on évalue le statut de l'utilisateur
                 if (results[0].autorisation == 'admin'){
-                    // si c'est un admin, on change ses droits
-                    userStorage['rights'] = 'admin';
+                    // si c'est un admin, on le redirige vers le dashboard admin
                 }
+                // on supprime la clef "autorisation" car l'utilisateur n'a pas besoin de connaître ses droits dans la BDD
+                delete results[0].autorisation;
+                // sinon, vers la page du compte utilisateur
                 res.render('welcome', { 'title': 'Accueil', 
                     'message': `Welcome ${name}`,
                     'storage': userStorage,
@@ -148,18 +150,6 @@ app.post('/confirm', (req,res) => {
         });
     });
 });
-
-app.get('/accueil/:id', (req,res)=>{
-    let myquery = `SELECT id_user FROM user WHERE id=${req.params.id} `;
-    console.log(myquery);
-    con.connect((err)=>{
-        if (err) throw err;
-        con.query(myquery, (err,results)=>{
-            if (err) throw err;
-            console.log(results);
-        })
-    })
-})
 
 
 /**
