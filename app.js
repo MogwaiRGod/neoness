@@ -59,8 +59,9 @@ con.connect((err) => {
  * ROUTES
  */
 
-// route test
+// route de base
 app.get('/', (req, res) => {
+    // comment vérifier si un utilisateur est loggé ?
     res.redirect('/sport_login');
 });
 
@@ -87,7 +88,7 @@ app.get('/admin', (req, res) => {
 }); // fin GET /admin
 
 app.get('/signin', (req,res) => {
-    res.render('sport_create_user', {'title': 'Sign In', 'message': 'Inscription' })
+    res.render('sport_create_user', {'title': 'Sign In', 'message': 'Inscription', 'erreur': "" })
 })
 
 app.post('/sport_create_user', (req,res) => {
@@ -101,13 +102,34 @@ app.post('/sport_create_user', (req,res) => {
     let pseudo = req.body.pseudo;
     let pass = req.body.pass;
 
-    let myquery = "INSERT INTO user (name, prenom, tel, poids, taille, objectif, pass, user_pseudo) VALUES (?,?,?,?,?,?,?,?) "
-    con.connect((err)=>{
+    // on vérifie que le pseudo demandé n'est pas déjà attribué
+    let checkUser = "SELECT user_pseudo FROM user WHERE user_pseudo = ?";
+    con.connect((err) => {
         if (err) throw err;
-        con.query(myquery, [name, prenom, tel, poids, taille, objectif, pass, pseudo], (err,results)=>{
-            res.redirect('/confirm')
-        })
-    })
+
+        con.query(checkUser, [pseudo], (err, results) => {
+            if (err) throw err;
+
+            // si la requête n'a pas retourné de résultat
+            if (!results.length){
+                // on peut ++ l'utilisateur à la BDD
+                let myquery = "INSERT INTO user (name, prenom, tel, poids, taille, objectif, pass, user_pseudo) VALUES (?,?,?,?,?,?,?,?) "
+                con.connect((err)=>{
+                    if (err) throw err;
+                    con.query(myquery, [name, prenom, tel, poids, taille, objectif, pass, pseudo], (err,results)=>{
+                        res.redirect('/confirm')
+                    });
+                }); 
+            }
+            // sinon, on envoie un message d'erreur
+            else {
+                res.render('sport_create_user', {'title': 'Sign In', 'message': 'Inscription', 'erreur': "Pseudo déjà attribué" })
+            }
+        }); // fin con.query
+
+    }); // fin con.connect
+
+
 })
 
 
