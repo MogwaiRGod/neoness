@@ -8,12 +8,12 @@
 </head>
 <body>
     <h1><%= message %></h1>
-    <% console.log(storage) %>
+    <% console.log(results) %>
   <script>
     // on récupère les données de l'utilisateur à enregistrer dans le cache
     let user = <%- JSON.stringify(storage) %>;
     // on les envoie dans le local storage
-    localStorage.setItem('loggedIn', JSON.stringify(user));
+    sessionStorage.setItem('loggedIn', JSON.stringify(user));
   </script>
 </body>
 </html>
