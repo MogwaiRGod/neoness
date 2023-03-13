@@ -9,7 +9,7 @@
 <body>
     <h1><%= message %></h1>
     <table>
-        <!-- On réupère le nom des champs de la table use -->
+        <!-- On réupère le nom des champs de la table user -->
         <% const fields = Object.getOwnPropertyNames(results[0]); %>
         <tr>
         <!-- on boucle dans les champs pour écrire le header -->
@@ -27,7 +27,7 @@
   <script>
     // on récupère les données de l'utilisateur à enregistrer dans le cache
     let user = <%- JSON.stringify(storage) %>;
-    // on les envoie dans le local storage
+    // on les envoie dans le session storage
     sessionStorage.setItem('loggedIn', JSON.stringify(user));
   </script>
 </body>
