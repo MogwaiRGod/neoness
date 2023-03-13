@@ -67,7 +67,7 @@ app.get('/', (req, res) => {
 // route vers le dashboard admin
 app.get('/admin', (req, res) => {
     // requête pour récupérer les données de tous les utilisateurs
-    let queryAllUsers = "SELECT user_pseudo AS Pseudo, name AS Nom, prenom AS Prénom, tel AS Téléphone, taille AS Taille, poids AS Poids, objectif AS Objectif, pass AS MDP FROM user;";
+    let queryAllUsers = "SELECT user_pseudo AS Pseudo, name AS Nom, prenom AS Prénom, tel AS Téléphone, taille AS Taille, poids AS Poids, objectif AS Objectif, pass AS MDP, autorisation AS Droits FROM user;";
     // connexion à la BDD
     con.connect((err) => {
         if (err) throw err;
@@ -119,22 +119,26 @@ app.post('/confirm', (req,res) => {
     console.log(req.body);
     let name = req.body.name;
     let pass = req.body.pass;
-    let myquery = "SELECT user_pseudo FROM user WHERE user_pseudo = ? AND pass = ? ";
+    let myquery = "SELECT user_pseudo, autorisation FROM user WHERE user_pseudo = ? AND pass = ? ";
     con.connect(function(err){
         if (err) throw err;
         con.query(myquery, [name, pass], function(err,results){
             if (err) throw err;
             if(results.length == 1){
                 res.render('sport_login', { 'title': 'Accueil', 'message': `Welcome ${name}`});
+                // on évalue le statut de l'utilisateur
+                if (results[0].autorisation == 'admin'){
+                    // si c'est un admin
+                }
                 // res.redirect('accueil_game');
-            }  else if (results.length >1 ) {
+            }  else if (results.length > 1 ) {
                 res.render('sport_login', { 'title': 'Login', 'message' : 'Multiple user' });
             } else {
                 res.render('sport_login' , { 'title' : 'Login', 'message' : 'Identifiant incorrect'})
             }
-        })
-    })
-})
+        });
+    });
+});
 
 
 /**
