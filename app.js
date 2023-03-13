@@ -114,6 +114,19 @@ app.post('/sport_create_user', (req,res) => {
     })
 })
 
+app.get('/accueil/:id', (req,res)=>{
+    let myquery = `SELECT id_user FROM user WHERE id${req.params.id} `;
+    console.log(myquery);
+    con.connect((err)=>{
+        if (err) throw err;
+        con.query(myquery, (err,results)=>{
+            if (err) throw err;
+            console.log(results);
+            res.send("sport_accueil", {'title':'user','message': 'infos', 'display_results': results});
+        })
+    })
+})
+
 /**
  * SERVEUR
  */
