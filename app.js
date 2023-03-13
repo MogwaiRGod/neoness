@@ -40,7 +40,7 @@ app.set(express.static("public"));
 
 // instanciation de la connexion à la BDD
 const con = mysql.createConnection({
-    host: "172.17.0.2", /* A VERIFIER */
+    host: "172.17.0.3", /* A VERIFIER */
     user : "pedrolove", /* A MODIFIER */
     password: "ThePassword", /* A MODIFIER */
     database: DB,
@@ -67,7 +67,7 @@ app.get('/', (req, res) => {
 // route vers le dashboard admin
 app.get('/admin', (req, res) => {
     // requête pour récupérer les données de tous les utilisateurs
-    let queryAllUsers = "SELECT * FROM user";
+    let queryAllUsers = "SELECT user_pseudo AS Pseudo, name AS Nom, prenom AS Prénom, tel AS Téléphone, taille AS Taille, poids AS Poids, objectif AS Objectif, pass AS MDP FROM user;";
     // connexion à la BDD
     con.connect((err) => {
         if (err) throw err;
@@ -76,13 +76,13 @@ app.get('/admin', (req, res) => {
         con.query(queryAllUsers, (err, results) => {
             if (err) throw err;
 
-            console.log(results)
+            // affichage de la page admin
+            res.render("admin", {
+                'title': "Dashboard admin",
+                'results': results /* envoi des résultats de la requête */
+            });
         }); // fin con.query
     }); // fin con.connect
-
-    res.render('admin', {
-        'title': "Dashboard admin"
-    });
 })
 
 
