@@ -8,27 +8,34 @@
 </head>
 <body>
     <h1><%= message %></h1>
-    <table>
-        <!-- On réupère le nom des champs de la table user -->
-        <% const fields = Object.getOwnPropertyNames(results[0]); %>
-        <tr>
-        <!-- on boucle dans les champs pour écrire le header -->
-        <% fields.forEach(field => { %>
-          <th><%= field %></th>
-        <% }); %>
-      </tr>
-      <tbody>
-          <tr>
-            <!-- On boucle dans les champs utilisateurs selon le nom des champs -->
+    <img src="<% results.avatar %>" alt="avatar">
+    <form method="POST" action="/update_user">
+        <table>
+            <!-- On réupère le nom des champs de la table user -->
+            <% const fields = Object.getOwnPropertyNames(results[0]); %>
+            <tr>
+            <!-- on boucle dans les champs pour écrire le header -->
             <% fields.forEach(field => { %>
-              <td><%= results[0][field] %></td>
+            <th><%= field %></th>
             <% }); %>
-    </table>
+        </tr>
+        <tbody>
+            <tr contenteditable="true">
+                <!-- On boucle dans les champs utilisateurs selon le nom des champs -->
+                <% fields.forEach(field => { %>
+                <td><%= results[0][field] %></td>
+                <% }); %>
+        </table>
+        <label>Modifier votre photo de profil</label>
+        <input id="url-pic" type="file" name="url-pic" value="#">
+        <button id="sub-file">Envoyer</button>
+    </form>
+
   <script>
     // on récupère les données de l'utilisateur à enregistrer dans le cache
     let user = <%- JSON.stringify(storage) %>;
     // on les envoie dans le session storage
-    sessionStorage.setItem('loggedIn', JSON.stringify(user));
+    sessionStorage.setItem('loggedIn', JSON.stringify(user));    
   </script>
 </body>
 </html>

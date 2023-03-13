@@ -151,6 +151,10 @@ app.post('/confirm', (req,res) => {
     });
 });
 
+// route recevant les données utilisateur à mettre à jour
+app.post('/update_user', (req, res) => {
+    console.log(req.body);
+}); // fin POST /update_user
 
 /**
  * SERVEUR
