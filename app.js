@@ -61,9 +61,58 @@ con.connect((err) => {
 
 // route test
 app.get('/', (req, res) => {
-    res.send("Route fonctionnelle");
+    res.redirect("/sport_login");
 })
 
+app.get('/sport_login', (req,res) => {
+    res.render("sport_login", {'title': 'Log In', 'message': 'Veuillez entrer vos identifiants afin de vous connecter'})
+})
+
+app.post('/confirm', (req,res) => {
+    console.log(req.body);
+    let name = req.body.name;
+    let pass = req.body.pass;
+    let myquery = "SELECT name FROM user WHERE name = ? AND pass = ? ";
+    con.connect(function(err){
+        if (err) throw err;
+        con.query(myquery, [name, pass], function(err,results){
+            if (err) throw err;
+            if(results.length == 1){
+                res.render('sport_login', { 'title': 'Accueil', 'message': `Welcome ${name}`});
+                // res.redirect('accueil_game');
+            }  else if (results.length >1 ) {
+                res.render('sport_login', { 'title': 'Login', 'message' : 'Multiple user' });
+            } else {
+                res.render('sport_login' , { 'title' : 'Login', 'message' : 'Identifiant incorrect'})
+            }
+        })
+    })
+})
+
+app.get('/signin', (req,res) => {
+    res.render('sport_create_user', {'title': 'Sign In', 'message': 'Inscription' })
+})
+
+app.post('/sport_create_user', (req,res) => {
+    console.log(req.body);
+    let name = req.body.name;
+    let prenom = req.body.prenom;
+    let tel = req.body.tel;
+    let poids = req.body.poids;
+    let taille = req.body.taille;
+    let objectif = req.body.objectif;
+    let pseudo = req.body.pseudo;
+    let pass = req.body.pass;
+
+    let myquery = "INSERT INTO user (name, prenom, tel, poids, taille, objectif, pass, user_pseudo) VALUES (?,?,?,?,?,?,?,?) "
+    con.connect((err)=>{
+        if (err) throw err;
+        con.query(myquery, [name, prenom, tel, poids, taille, objectif, pass, pseudo], (err,results)=>{
+            console.log(results);
+            res.redirect('accueil_game')
+        })
+    })
+})
 
 /**
  * SERVEUR
