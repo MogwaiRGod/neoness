@@ -23,10 +23,10 @@
             <% }); %>
           </tr>
           <tbody>
-            <!-- On autorise la modification directe du contenu de la table -->
-            <tr contenteditable="true">
               <!-- On boucle dans les utilisateurs pour remplir la table -->
               <% results.forEach(user => { %>
+              <!-- On autorise la modification directe du contenu de la table -->
+               <tr contenteditable="true">
                   <!-- On boucle dans les champs utilisateurs selon le nom des champs -->
                   <% fields.forEach(field => { %>
                     <td><%= user[field] %></td>
