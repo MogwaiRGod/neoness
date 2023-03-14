@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+</head>
+<body>
+    <% results.forEach(function (item) { %>
+        <form method="post" action="/modifProfil">
+            <input type="hidden" id="id" name="id" value="<%= item.id_user %>"> 
+            <label>name : </label> <input type="text" id="name" name="name" value="<%= item.Nom %>" required><br>
+            <label>pseudo : </label> <input type="text" id="pseudo" name="pseudo" value="<%= item.Username %>" required><br>
+            <label>pass : </label>  <input type="password" id="pass" name="pass" value="<%= item.pass %>" required><br>
+            <label>prenom : </label>  <input type="text" id="prenom" name="prenom" value="<%= item.Prénom %>" required><br>
+            <label>tel : </label>  <input type="tel" id="tel" name="tel" value="<%= item.Téléphone %>" required><br>
+            <label>poids : </label>  <input type="number" step="0.01" id="poids" name="poids" value="<%= item.Poids %>" required><br>
+            <label>taille : </label>  <input type="number" step="0.01" id="taille" name="taille" value="<%= item.Taille %>" required><br>
+            <label>objectif : </label>  <input type="number" step="0.01" id="objectif" name="objectif" value="<%= item.Objectif %>" required><br>
+            <label>avatar : </label>  <input type="text" id="avatar" name="avatar" value="<%= item.avatar %>" required><br>
+             <button id="">sign in</button>
+         </form>
+     <% }) %>
+
+</body>
+</html>
