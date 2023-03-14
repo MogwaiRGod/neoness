@@ -4,11 +4,11 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><%= title %></title>
+    <title><%= title %>></title>
 </head>
 <body>
     <div><%= message %></div>
-    <form method="post" action="sport_create_user">
+    <form method="post" action="/sport_create_user">
        <label>name : </label> <input type="text" id="name" name="name" required><br>
        <label>pseudo : </label> <input type="text" id="pseudo" name="pseudo" required><br>
        <label>pass : </label>  <input type="password" id="pass" name="pass" required><br>
@@ -17,17 +17,9 @@
        <label>poids : </label>  <input type="number" step="0.01" id="poids" name="poids" required><br>
        <label>taille : </label>  <input type="number" step="0.01" id="taille" name="taille" required><br>
        <label>objectif : </label>  <input type="number" step="0.01" id="objectif" name="objectif" required><br>
-       <label>confirm pass : </label>  <input type="password" id="confirm_pass" name="pass_confirm" required><br>
-       <button id="">sign in</button>
-       <aside><%= erreur %></aside>
+       <input type="hidden" id="avatar" name="avatar" value="https://cdn-icons-png.flaticon.com/128/1077/1077114.png"><br>
+        <button>sign in</button>
     </form>
-    <script>
-        // confirm_pass.addEventListener('change', function(evt){
-        //     if(confirm_values.length < pass.value.length){
-        //         if(confirm_pass > pass.length){
-        //         }
-        //     }
-        // })
-    </script>
+
 </body>
 </html>

@@ -15,7 +15,7 @@ const ejs = require('ejs');
  * CONSTANTES
  */
 // nom de la BDD
-const DB = "neoness"; /* A REMPLIR */
+const DB = ""; /* A REMPLIR */
 const HOST = '0.0.0.0';
 const PORT = 8080;
 
@@ -40,15 +40,14 @@ app.set(express.static("public"));
 
 // instanciation de la connexion à la BDD
 const con = mysql.createConnection({
-    host: "172.17.0.3", /* A VERIFIER */
-    user : "pedrolove", /* A MODIFIER */
-    password: "ThePassword", /* A MODIFIER */
-    database: DB,
+    host:'172.17.0.2',
+    user:'pedrolove',
+    password:'ThePassword',
+    database:'neoness',
     multipleStatements: true
 });
 
 
-// connexion test à la BDD
 con.connect((err) => {
     if (err) throw err;
     console.log(`Connecté à la BDD ${DB}`);
@@ -88,7 +87,7 @@ app.get('/admin', (req, res) => {
 }); // fin GET /admin
 
 app.get('/signin', (req,res) => {
-    res.render('sport_create_user', {'title': 'Sign In', 'message': 'Inscription', 'erreur': "" })
+    res.render('sport_create_user', {'title': 'Sign In', 'message': 'Inscription' })
 })
 
 app.post('/sport_create_user', (req,res) => {
@@ -101,6 +100,7 @@ app.post('/sport_create_user', (req,res) => {
     let objectif = req.body.objectif;
     let pseudo = req.body.pseudo;
     let pass = req.body.pass;
+    let avatar = req.body.avatar;
 
     // on vérifie que le pseudo demandé n'est pas déjà attribué
     let checkUser = "SELECT user_pseudo FROM user WHERE user_pseudo = ?";
@@ -112,12 +112,25 @@ app.post('/sport_create_user', (req,res) => {
 
             // si la requête n'a pas retourné de résultat
             if (!results.length){
+                let userStorage = {
+                    'username': pseudo,
+                    // 'rights': results[0].autorisation
+                }
                 // on peut ++ l'utilisateur à la BDD
-                let myquery = "INSERT INTO user (name, prenom, tel, poids, taille, objectif, pass, user_pseudo) VALUES (?,?,?,?,?,?,?,?) "
+                // let myquery = 'ALTER TABLE user AUTO_INCREMENT = MAX(id_user) ;' 
+                let myquery = "INSERT INTO user (name, prenom, tel, poids, taille, objectif, pass, user_pseudo, avatar) VALUES (?,?,?,?,?,?,?,?,?) "
                 con.connect((err)=>{
                     if (err) throw err;
-                    con.query(myquery, [name, prenom, tel, poids, taille, objectif, pass, pseudo], (err,results)=>{
-                        res.redirect('/confirm')
+                    con.query(myquery, [name, prenom, tel, poids, taille, objectif, pass, pseudo, avatar], (err,results)=>{
+                        let queryUser = "SELECT * FROM user WHERE user_pseudo = ? AND pass = ?;";
+                        con.query(queryUser, [pseudo, pass], (err, results) => {
+                           // console.log(results[0])
+                            res.render('welcome', { 'title': 'Accueil', 
+                            'message': `Welcome ${name}`,
+                            'storage': userStorage,
+                            'results': results[0]
+                           });
+                        });
                     });
                 }); 
             }
@@ -137,35 +150,36 @@ app.get('/sport_login', (req,res) => {
     res.render("sport_login", {'title': 'Log In', 'message': 'Veuillez entrer vos identifiants afin de vous connecter'})
 })
 
+
+
 app.post('/confirm', (req,res) => {
     console.log(req.body);
-    let name = req.body.name;
+    let pseudo = req.body.pseudo;
     let pass = req.body.pass;
-    let myquery = "SELECT user_pseudo AS Username, name AS Nom, prenom AS Prénom, tel AS Téléphone, poids AS Poids, taille AS Taille, objectif AS Objectif, autorisation FROM user WHERE user_pseudo = ? AND pass = ? ";
+    let myquery = "SELECT * FROM user WHERE user_pseudo = ? AND pass = ? ";
     con.connect(function(err){
         if (err) throw err;
-        con.query(myquery, [name, pass], function(err,results){
+        con.query(myquery, [pseudo, pass], function(err,results){
             if (err) throw err;
-            if(results.length == 1){
+            if(results.length){
                 // on va enregistrer l'utilisateur dans le cache local
                 let userStorage = {
-                    'username': name,
+                    'username': pseudo,
                     'rights': results[0].autorisation
                 }
                 // on évalue le statut de l'utilisateur
                 if (results[0].autorisation == 'admin'){
                     // si c'est un admin, on le redirige vers le dashboard admin
+                    res.redirect('/admin');
                 }
                 // on supprime la clef "autorisation" car l'utilisateur n'a pas besoin de connaître ses droits dans la BDD
                 delete results[0].autorisation;
                 // sinon, vers la page du compte utilisateur
                 res.render('welcome', { 'title': 'Accueil', 
-                    'message': `Welcome ${name}`,
+                    'message': `Welcome ${pseudo}`,
                     'storage': userStorage,
-                    'results': results
+                    'results': results[0]
                 });
-            }  else if (results.length > 1 ) {
-                res.render('sport_login', { 'title': 'Login', 'message' : 'Multiple user' });
             } else {
                 res.render('sport_login' , { 'title' : 'Login', 'message' : 'Identifiant incorrect'})
             }
@@ -173,9 +187,28 @@ app.post('/confirm', (req,res) => {
     });
 });
 
+app.get('/modif', (req, res) => {
+    let myquery = "SELECT user_pseudo AS Username, name AS Nom, prenom AS Prénom, tel AS Téléphone, poids AS Poids, taille AS Taille, objectif AS Objectif, autorisation, avatar FROM user ";
+    con.connect((err)=>{
+        if (err) throw err;
+        con.query(myquery, (err,results)=>{
+            if (err) throw err;
+            res.render('sport_modifProfil', { 'title': 'modif', 'results': results})
+        })
+    })
+});
 // route recevant les données utilisateur à mettre à jour
-app.post('/update_user', (req, res) => {
+app.post('/modifProfil', (req, res) => {
     console.log(req.body);
+    let myquery = `UPDATE user SET name, prenom, tel, poids, taille, objectif, pass, user_pseudo, avatar WHERE name='name'`;
+    console.log(myquery);
+    con.connect((err)=>{
+        if (err) throw err;
+        con.query(myquery, (err,results)=>{
+            if (err) throw err;
+            res.redirect('welcome')
+        })
+    })
 }); // fin POST /update_user
 
 /**

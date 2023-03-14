@@ -7,35 +7,85 @@
     <title><%= title %></title>
 </head>
 <body>
-    <h1><%= message %></h1>
-    <img src="<% results.avatar %>" alt="avatar">
-    <form method="POST" action="/update_user">
-        <table>
-            <!-- On réupère le nom des champs de la table user -->
-            <% const fields = Object.getOwnPropertyNames(results[0]); %>
-            <tr>
-            <!-- on boucle dans les champs pour écrire le header -->
-            <% fields.forEach(field => { %>
-            <th><%= field %></th>
-            <% }); %>
-        </tr>
-        <tbody>
-            <tr contenteditable="true">
-                <!-- On boucle dans les champs utilisateurs selon le nom des champs -->
-                <% fields.forEach(field => { %>
-                <td><%= results[0][field] %></td>
-                <% }); %>
-        </table>
-        <label>Modifier votre photo de profil</label>
-        <input id="url-pic" type="file" name="url-pic" value="#">
-        <button id="sub-file">Envoyer</button>
-    </form>
+    <style>
+        html {
+            color: darkblue; background-color: cornsilk; background-image: url(''); background-repeat: no-repeat; background-size: 100% 100%; text-align: center; animation: move 3s linear;
+        }
+        table, th, tr, td {
+           background-color: white; border-collapse: collapse; border: 3px double black; padding: 2px 4px; text-align: center; margin: auto;
+        }
+        #avatar{
+            width: 100px; height: 100px; border-radius: 50px;
+        }
+        #formModif {
+            display: none;
+        }
+        @keyframes move {
+            from {opacity: 0;}
+            to {opacity: 1;}
+        }
+    
+    </style>
+    <h1><%= message %></h1><br>
+               
+        <div><img id="avatar" src="<%= results.avatar %>"></div>
+        <a href="/sport_login"><input id="deco" type="button" value="deconection"></a>
+        <input id="modif" type="button" value="Modifier mon profil">
+        <p>Mon poids : <%= results.poids %>Kg</p>
+        <input type="hidden" id="poids" value="<%= results.poids %>"> 
+        <p>Ma taille : <%= results.taille %>M</p>
+        <input type="hidden" id="taille" value="<%= results.taille %>"> 
+        <p>Mon objectif : <%= results.objectif %>Kg</p><br>
+        <input id="button" type="button" value="get imc" ><br><br>
+        <div id="imc"> </div>
+        
+        
+        <div>
+        <form id="formModif" method="post" action="/modifProfil">
+            <input type="hidden" id="id" name="id" value="<%= results.id_user %>"> 
+            <% console.log(results.id_user) %>
+            <label>name : </label> <input type="text" id="name" name="name" value="<%= results.nom %>" required><br>
+            <label>pseudo : </label> <input type="text" id="pseudo" name="pseudo" value="<%= results.user_pseudo %>" required><br>
+            <label>pass : </label>  <input type="password" id="pass" name="pass" value="<%= results.pass %>" required><br>
+            <label>prenom : </label>  <input type="text" id="prenom" name="prenom" value="<%= results.prenom %>" required><br>
+            <label>tel : </label>  <input type="tel" id="tel" name="tel" value="<%= results.tel %>" required><br>
+            <label>poids : </label>  <input type="number" step="0.01" id="poids" name="poids" value="<%= results.poids %>" required><br>
+            <label>taille : </label>  <input type="number" step="0.01" id="taille" name="taille" value="<%= results.taille %>" required><br>
+            <label>objectif : </label>  <input type="number" step="0.01" id="objectif" name="objectif" value="<%= results.objectif %>" required><br>
+            <label>avatar : </label>  <input type="text" id="avatar1" name="avatar1" value="<%= results.avatar %>" required><br>
+            <button >Modif</button>
+         </form>
+        </div>
+     <script>
+        // à la connexion, on récupère les données de l'utilisateur à enregistrer dans le cache
+        let user = <%- JSON.stringify(storage) %>;
+        // on les envoie dans le session storage
+        sessionStorage.setItem('loggedIn', JSON.stringify(user)); 
 
-  <script>
-    // on récupère les données de l'utilisateur à enregistrer dans le cache
-    let user = <%- JSON.stringify(storage) %>;
-    // on les envoie dans le session storage
-    sessionStorage.setItem('loggedIn', JSON.stringify(user));    
-  </script>
+         button.addEventListener('click', () => {
+                 let poids = document.getElementById('poids').value
+                 let taille = document.getElementById('taille').value
+                 let imc = document.getElementById('imc')
+                 let result = (poids / Math.pow(taille, 2)).toFixed(2)
+             document.getElementById('imc').innerHTML = `IMC = ${result} <br>`
+             document.getElementById('imc').innerHTML += `<img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQr4bvZYaNENT3auaf6E5j8spRUBlbGVcgieA&usqp=CAU">` 
+          })
+
+          // à la déconnexion, on supprime les données dans le session storage
+          deco.addEventListener("click", ()=>{
+            sessionStorage.removeItem("loggedIn");
+          })
+
+          let form = document.getElementById('formModif');
+          modif.addEventListener('click', ()=>{
+            if (form.style.display==="block"){
+                form.style.display="none";
+            } else {
+                form.style.display="block";
+            }
+          })
+     </script>
+                
+
 </body>
 </html>
