@@ -81,42 +81,40 @@
          </form>
     </div>
     
-    <!-- DIAGRAMMES A FAIRE
-    <div>
+    <!-- DIAGRAMMES A FAIRE -->
+    <!-- <div> -->
         <!-- Diagramme circulaire affichant les activités effectuées par l'utilisateur -->
-        <canvas id="diagramme-activite"></canvas>
-    </div>
+        <!-- <canvas id="diagramme-activite"></canvas> -->
+    <!-- </div> -->
       
     <!-- librairie pour faire des diagrammes -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> -->
     
-    <script>
-    const diagrammeAct = document.getElementById('diagramme-activite');
-    
-    new Chart(diagrammeAct, {
-        type: 'doughnut',
-        radius: '50%',
-        data: {
-            labels: [
-                'Red',
-                'Blue',
-                'Yellow'
-            ],
-            datasets: [{
-                label: 'My First Dataset',
-                data: [300, 50, 100],
-                backgroundColor: [
-                'rgb(255, 99, 132)',
-                'rgb(54, 162, 235)',
-                'rgb(255, 205, 86)'
+    <!-- <script> -->
+        const diagrammeAct = document.getElementById('diagramme-activite');
+        
+        new Chart(diagrammeAct, {
+            type: 'doughnut',
+            radius: '50%',
+            data: {
+                labels: [
+                    'Red',
+                    'Blue',
+                    'Yellow'
                 ],
-                hoverOffset: 4
-            }]
-        }
-    });
-    </script> 
-        -->
-      
+                datasets: [{
+                    label: 'My First Dataset',
+                    data: [300, 50, 100],
+                    backgroundColor: [
+                    'rgb(255, 99, 132)',
+                    'rgb(54, 162, 235)',
+                    'rgb(255, 205, 86)'
+                    ],
+                    hoverOffset: 4
+                }]
+            }
+        });
+    <!-- </script> -->
 
     <script>
         // à la connexion, on récupère les données de l'utilisateur à enregistrer dans le cache
