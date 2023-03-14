@@ -17,7 +17,7 @@
         #avatar{
             width: 100px; height: 100px; border-radius: 50px;
         }
-        #formModif {
+        #formModif, #imc {
             display: none;
         }
         @keyframes move {
@@ -26,10 +26,15 @@
         }
     
     </style>
-    <h1><%= message %></h1><br>
+    <h1><%= message %></h1>
                
         <div><img id="avatar" src="<%= results.avatar %>"></div>
-        <a href="/login"><input id="deco" type="button" value="deconection"></a>
+        <a href="/login"><input id="deco" type="button" value="Déconnexion"></a>
+        <!-- "<%= results.id_user %>" -->
+        <form id="delete" method="post" action="/deleteUser">
+            <input type="hidden" id="id" name="id" value="<%= results.id_user %>">
+            <button>delete</button>
+        </form>
         <input id="modif" type="button" value="Modifier mon profil">
         <p>Mon poids : <%= results.poids %>Kg</p>
         <input type="hidden" id="poids" value="<%= results.poids %>"> 
@@ -43,49 +48,73 @@
         <div>
         <form id="formModif" method="post" action="/update">
             <input type="hidden" id="id" name="id" value="<%= results.id_user %>"> 
-            <% console.log(results.id_user) %>
-            <label>name : </label> <input type="text" id="name" name="name" value="<%= results.nom %>" required><br>
-            <label>pseudo : </label> <input type="text" id="pseudo" name="pseudo" value="<%= results.user_pseudo %>" required><br>
-            <label>pass : </label>  <input type="password" id="pass" name="pass" value="<%= results.pass %>" required><br>
-            <label>prenom : </label>  <input type="text" id="prenom" name="prenom" value="<%= results.prenom %>" required><br>
-            <label>tel : </label>  <input type="tel" id="tel" name="tel" value="<%= results.tel %>" required><br>
-            <label>poids : </label>  <input type="number" step="0.01" id="poids" name="poids" value="<%= results.poids %>" required><br>
-            <label>taille : </label>  <input type="number" step="0.01" id="taille" name="taille" value="<%= results.taille %>" required><br>
-            <label>objectif : </label>  <input type="number" step="0.01" id="objectif" name="objectif" value="<%= results.objectif %>" required><br>
-            <label>avatar : </label>  <input type="text" id="avatar1" name="avatar1" value="<%= results.avatar %>" required><br>
-            <button >Modif</button>
+            <label>Nom : </label>
+            <input type="text" id="name" name="name" value="<%= results.name %>" required>
+            <label>Pseudo : </label>
+            <input type="text" id="pseudo" name="pseudo" value="<%= results.user_pseudo %>" required>
+            <label>Mot de passe : </label>
+            <input type="password" id="pass" name="pass" value="<%= results.pass %>" required>
+            <label>Prénom : </label>
+            <input type="text" id="prenom" name="prenom" value="<%= results.prenom %>" required>
+            <label>Téléphone : </label>
+            <input type="tel" id="tel" name="tel" value="<%= results.tel %>" required>
+            <label>Poids : </label>
+            <input type="number" step="0.01" id="poids" name="poids" value="<%= results.poids %>" required>
+            <label>Taille : </label>
+            <input type="number" step="0.01" id="taille" name="taille" value="<%= results.taille %>" required>
+            <label>Objectif : </label>
+            <input type="number" step="0.01" id="objectif" name="objectif" value="<%= results.objectif %>" required>
+            <label>Avatar : </label>
+            <input type="text" id="avatar1" name="avatar1" value="<%= results.avatar %>" required>
+            <button>Modifier</button>
          </form>
         </div>
+
      <script>
         // à la connexion, on récupère les données de l'utilisateur à enregistrer dans le cache
         let user = <%- JSON.stringify(storage) %>;
-        // on les envoie dans le session storage
-        sessionStorage.setItem('loggedIn', JSON.stringify(user)); 
+        if (user) { 
+            // on les envoie dans le session storage
+            sessionStorage.setItem('loggedIn', JSON.stringify(user)); 
+        }
+   
+        button.addEventListener('click', () => {
+            let poids = document.getElementById('poids').value;
+            let taille = document.getElementById('taille').value;
+            let imc = document.getElementById('imc');
+            // calcul de l'IMC
+            let result = (poids / Math.pow(taille, 2)).toFixed(2);
+            // affichage de l'IMC
+            document.getElementById('imc').innerHTML = `IMC = ${result} <br>`
+            // image avec les classifications d'IMC
+            document.getElementById('imc').innerHTML += `<img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQr4bvZYaNENT3auaf6E5j8spRUBlbGVcgieA&usqp=CAU">` 
+        });
 
-         button.addEventListener('click', () => {
-                 let poids = document.getElementById('poids').value
-                 let taille = document.getElementById('taille').value
-                 let imc = document.getElementById('imc')
-                 let result = (poids / Math.pow(taille, 2)).toFixed(2)
-             document.getElementById('imc').innerHTML = `IMC = ${result} <br>`
-             document.getElementById('imc').innerHTML += `<img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQr4bvZYaNENT3auaf6E5j8spRUBlbGVcgieA&usqp=CAU">` 
-          })
-
-          // à la déconnexion, on supprime les données dans le session storage
-          deco.addEventListener("click", ()=>{
+        // à la déconnexion, on supprime les données dans le session storage
+        deco.addEventListener("click", ()=>{
             sessionStorage.removeItem("loggedIn");
-          })
+        });
 
-          let form = document.getElementById('formModif');
-          modif.addEventListener('click', ()=>{
-            if (form.style.display==="block"){
-                form.style.display="none";
+        let form = document.getElementById('formModif');
+        // affiche/cache le formulaire de modification du profil au clic du bouton
+        modif.addEventListener('click', () => {
+            if (form.style.display === "block"){
+                form.style.display = "none";
             } else {
-                form.style.display="block";
+                form.style.display = "block";
             }
-          })
+        });
+
+        let imc = document.getElementById('imc');
+        // affiche/cache l''IMC au clic du bouton
+        button.addEventListener('click', () => {
+            if (imc.style.display === "block"){
+                imc.style.display = "none";
+            } else {
+                imc.style.display = "block";
+            }
+        });
      </script>
                 
-
 </body>
 </html>

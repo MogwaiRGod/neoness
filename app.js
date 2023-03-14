@@ -47,7 +47,7 @@ const con = mysql.createConnection({
     multipleStatements: true
 });
 
-
+// connexion test à la BDD
 con.connect((err) => {
     if (err) throw err;
     console.log(`Connecté à la BDD ${DB}`);
@@ -58,7 +58,7 @@ con.connect((err) => {
  * ROUTES
  */
 
-// route de base
+// route d'accueil'
 app.get('/', (req, res) => {
     // comment vérifier si un utilisateur est loggé ?
     res.redirect('/login');
@@ -122,10 +122,10 @@ app.post('/signin', (req,res) => {
                         con.query(queryUser, [pseudo, pass], (err, results) => {
                            // console.log(results[0])
                             res.render('welcome', { 'title': 'Accueil', 
-                            'message': `Welcome ${name}`,
-                            'storage': userStorage,
-                            'results': results[0]
-                           });
+                                'message': `Welcome ${prenom}`,
+                                'storage': userStorage,
+                                'results': results[0]
+                            });
                         });
                     });
                 }); 
@@ -152,7 +152,7 @@ app.post('/confirm', (req,res) => {
     console.log(req.body);
     let pseudo = req.body.pseudo;
     let pass = req.body.pass;
-    let myquery = "SELECT * FROM user WHERE user_pseudo = ? AND pass = ? ";
+    let myquery = "SELECT * FROM user WHERE user_pseudo = ? AND pass = ?;";
     con.connect(function(err){
         if (err) throw err;
         con.query(myquery, [pseudo, pass], function(err,results){
@@ -172,7 +172,7 @@ app.post('/confirm', (req,res) => {
                 delete results[0].autorisation;
                 // sinon, vers la page du compte utilisateur
                 res.render('welcome', { 'title': 'Accueil', 
-                    'message': `Welcome ${pseudo}`,
+                    'message': `Welcome ${results[0].prenom}`,
                     'storage': userStorage,
                     'results': results[0]
                 });
@@ -183,30 +183,54 @@ app.post('/confirm', (req,res) => {
     });
 });
 
-app.get('/update', (req, res) => {
-    let myquery = "SELECT user_pseudo AS Username, name AS Nom, prenom AS Prénom, tel AS Téléphone, poids AS Poids, taille AS Taille, objectif AS Objectif, autorisation, avatar FROM user ";
-    con.connect((err)=>{
-        if (err) throw err;
-        con.query(myquery, (err,results)=>{
-            if (err) throw err;
-            res.render('sport_modifProfil', { 'title': 'modif', 'results': results})
-        })
-    })
-});
 
 // route recevant les données utilisateur à mettre à jour
 app.post('/update', (req, res) => {
     console.log(req.body);
-    let myquery = `UPDATE user SET name, prenom, tel, poids, taille, objectif, pass, user_pseudo, avatar WHERE name='name'`;
-    console.log(myquery);
+    let id = req.body.id;
+    let name = req.body.name;
+    let prenom = req.body.prenom;
+    let tel = req.body.tel;
+    let poids = req.body.poids;
+    let taille = req.body.taille;
+    let objectif = req.body.objectif;
+    let pseudo = req.body.pseudo;
+    let pass = req.body.pass;
+    let avatar = req.body.avatar1;
+    let queryUpd = `UPDATE user SET name = '${name}', prenom = '${prenom}', tel = '${tel}', poids = '${poids}', taille = '${taille}', objectif = '${objectif}', pass = '${pass}', user_pseudo = '${pseudo}', avatar = '${avatar}' WHERE id_user = ${id}`;
+    
     con.connect((err)=>{
         if (err) throw err;
-        con.query(myquery, (err,results)=>{
+        // on envoie la requête de mise à jour
+        con.query(queryUpd, (err,results)=>{
             if (err) throw err;
-            res.redirect('welcome')
-        })
-    })
+
+            let queryUser = "SELECT * FROM user WHERE id_user = ?;";
+            // une fois la màj effectuée dans la BDD
+            con.query(queryUser, [id], (err, results) => {
+                // on réaffiche la page avec les résultats mis à jour
+                res.render('welcome', { 'title': 'Accueil', 
+                    'message': `Welcome ${prenom}`,
+                    'storage': '',
+                    'results': results[0]
+                });
+            })
+        });
+    });
 }); // fin POST /update
+
+app.post('/deleteUser', (req,res) => {
+    let id = req.body.id;
+    let myquery = `DELETE FROM user WHERE id_user = ${id};`
+    con.connect((err) => {
+        if (err) throw err;
+        con.query(myquery, (err, results) => {
+            if (err) throw err;
+            res.redirect('/login')
+        });
+    });
+});
+
 
 /**
  * SERVEUR
