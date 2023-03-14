@@ -61,7 +61,7 @@ con.connect((err) => {
 // route de base
 app.get('/', (req, res) => {
     // comment vérifier si un utilisateur est loggé ?
-    res.redirect('/sport_login');
+    res.redirect('/login');
 });
 
 // route vers le dashboard admin
@@ -86,7 +86,7 @@ app.get('/admin', (req, res) => {
     }); // fin con.connect
 }); // fin GET /admin
 
-app.post('/sport_create_user', (req,res) => {
+app.post('/signin', (req,res) => {
     console.log(req.body);
     let name = req.body.name;
     let prenom = req.body.prenom;
@@ -142,7 +142,7 @@ app.post('/sport_create_user', (req,res) => {
 })
 
 
-app.get('/sport_login', (req,res) => {
+app.get('/login', (req,res) => {
     res.render("sport_login", {'title': 'Log In', 'message': 'Veuillez entrer vos identifiants afin de vous connecter', 'erreur':""})
 })
 
@@ -183,7 +183,7 @@ app.post('/confirm', (req,res) => {
     });
 });
 
-app.get('/modif', (req, res) => {
+app.get('/update', (req, res) => {
     let myquery = "SELECT user_pseudo AS Username, name AS Nom, prenom AS Prénom, tel AS Téléphone, poids AS Poids, taille AS Taille, objectif AS Objectif, autorisation, avatar FROM user ";
     con.connect((err)=>{
         if (err) throw err;
@@ -193,8 +193,9 @@ app.get('/modif', (req, res) => {
         })
     })
 });
+
 // route recevant les données utilisateur à mettre à jour
-app.post('/modifProfil', (req, res) => {
+app.post('/update', (req, res) => {
     console.log(req.body);
     let myquery = `UPDATE user SET name, prenom, tel, poids, taille, objectif, pass, user_pseudo, avatar WHERE name='name'`;
     console.log(myquery);
@@ -205,7 +206,7 @@ app.post('/modifProfil', (req, res) => {
             res.redirect('welcome')
         })
     })
-}); // fin POST /update_user
+}); // fin POST /update
 
 /**
  * SERVEUR
