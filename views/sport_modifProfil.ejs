@@ -8,7 +8,7 @@
 </head>
 <body>
     <% results.forEach(function (item) { %>
-        <form method="post" action="/modifProfil">
+        <form method="post" action="/update">
             <input type="hidden" id="id" name="id" value="<%= item.id_user %>"> 
             <label>name : </label> <input type="text" id="name" name="name" value="<%= item.Nom %>" required><br>
             <label>pseudo : </label> <input type="text" id="pseudo" name="pseudo" value="<%= item.Username %>" required><br>
