@@ -55,7 +55,7 @@ CREATE TABLE `seance` (
   PRIMARY KEY (`id_seance`),
   KEY `id_activite` (`id_activite`),
   CONSTRAINT `id_activite` FOREIGN KEY (`id_activite`) REFERENCES `activite_physique` (`id_activite_physique`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -64,6 +64,7 @@ CREATE TABLE `seance` (
 
 LOCK TABLES `seance` WRITE;
 /*!40000 ALTER TABLE `seance` DISABLE KEYS */;
+INSERT INTO `seance` VALUES (1,25,2,'2023-03-13');
 /*!40000 ALTER TABLE `seance` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -90,7 +91,7 @@ CREATE TABLE `user` (
   PRIMARY KEY (`id_user`),
   KEY `id_seance_idx` (`id_seance`),
   CONSTRAINT `id_seance` FOREIGN KEY (`id_seance`) REFERENCES `seance` (`id_seance`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -99,7 +100,7 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES (1,'ben','micka','55.55.55.55.55',62.50,1.74,60,'azerty',NULL,'killard','user','https://www.automobile-sportive.com/guide/peugeot/307cc/307cc-ouverture.jpg'),(2,'rob','diane','44.44.44.44.44',55.50,1.70,50,'qwerty',NULL,'mogwai','admin','https://images.rtl.fr/~c/770v513/rtl/www/1520158-le-personnage-gizmo-image-d-illustration.jpg'),(7,'c','c','123',56.76,1.20,44,'c',NULL,'c','user','https://cdn-icons-png.flaticon.com/128/1077/1077114.png');
+INSERT INTO `user` VALUES (1,'ben','micka','55.55.55.55.55',65.00,1.74,60,'azerty',1,'killard','user','https://www.automobile-sportive.com/guide/peugeot/307cc/307cc-ouverture.jpg'),(2,'rob','diane','44.44.44.44.44',55.50,1.70,50,'qwerty',NULL,'mogwai','admin','https://images.rtl.fr/~c/770v513/rtl/www/1520158-le-personnage-gizmo-image-d-illustration.jpg'),(3,'c','c','122',75.25,1.20,44,'c',NULL,'c','user','https://cdn-icons-png.flaticon.com/128/1077/1077114.png');
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -112,4 +113,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-03-14  2:04:25
+-- Dump completed on 2023-03-14  9:04:48

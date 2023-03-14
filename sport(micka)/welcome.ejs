@@ -9,7 +9,7 @@
 <body>
     <style>
         html {
-            color: darkblue; background-color: cornsilk; background-image: url(''); background-repeat: no-repeat; background-size: 100% 100%; text-align: center;
+            color: darkblue; background-color: cornsilk; background-image: url(''); background-repeat: no-repeat; background-size: 100% 100%; text-align: center; animation: move 3s linear;
         }
         table, th, tr, td {
            background-color: white; border-collapse: collapse; border: 3px double black; padding: 2px 4px; text-align: center; margin: auto;
@@ -17,23 +17,46 @@
         #avatar{
             width: 100px; height: 100px; border-radius: 50px;
         }
+        #formModif {
+            display: none;
+        }
+        @keyframes move {
+            from {opacity: 0;}
+            to {opacity: 1;}
+        }
     
     </style>
     <h1><%= message %></h1><br>
                
-    <% results.forEach(function (item) { %>
+    <% results.forEach((item)=>{ %>
         <div><img id="avatar" src="<%= item.avatar %>"></div>
         <a href="/sport_login"><input id="deco" type="button" value="deconection"></a>
-        <a href="/modif"><input id="modif" type="button" value="Modifier mon profil"></a>
+        <input id="modif" type="button" value="Modifier mon profil">
         <p>Mon poids : <%= item.Poids %>Kg</p>
         <input type="hidden" id="poids" value="<%= item.Poids %>"> 
         <p>Ma taille : <%= item.Taille %>M</p>
         <input type="hidden" id="taille" value="<%= item.Taille %>"> 
         <p>Mon objectif : <%= item.Objectif %>Kg</p><br>
         <input id="button" type="button" value="get imc" ><br><br>
-     <% }) %>
-     <div id="imc"> </div>
-
+        <div id="imc"> </div>
+        
+        
+        <div>
+        <form id="formModif" method="post" action="/modifProfil">
+            <input type="hidden" id="id" name="id" value="<%= item.id_user %>"> 
+            <label>name : </label> <input type="text" id="name" name="name" value="<%= item.Nom %>" required><br>
+            <label>pseudo : </label> <input type="text" id="pseudo" name="pseudo" value="<%= item.Username %>" required><br>
+            <label>pass : </label>  <input type="password" id="pass" name="pass" value="<%= item.pass %>" required><br>
+            <label>prenom : </label>  <input type="text" id="prenom" name="prenom" value="<%= item.Prénom %>" required><br>
+            <label>tel : </label>  <input type="tel" id="tel" name="tel" value="<%= item.Téléphone %>" required><br>
+            <label>poids : </label>  <input type="number" step="0.01" id="poids" name="poids" value="<%= item.Poids %>" required><br>
+            <label>taille : </label>  <input type="number" step="0.01" id="taille" name="taille" value="<%= item.Taille %>" required><br>
+            <label>objectif : </label>  <input type="number" step="0.01" id="objectif" name="objectif" value="<%= item.Objectif %>" required><br>
+            <label>avatar : </label>  <input type="text" id="avatar1" name="avatar1" value="<%= item.avatar %>" required><br>
+            <button >Modif</button>
+         </form>
+        </div>
+        <% }) %>
      <script>
  
          button.addEventListener('click', () => {
@@ -47,6 +70,15 @@
 
           deco.addEventListener("click", ()=>{
             sessionStorage.setItem("is_logged", false);
+          })
+
+          let form = document.getElementById('formModif');
+          modif.addEventListener('click', ()=>{
+            if (form.style.display==="block"){
+                form.style.display="none";
+            } else {
+                form.style.display="block";
+            }
           })
      </script>
                 
