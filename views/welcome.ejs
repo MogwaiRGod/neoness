@@ -14,7 +14,7 @@
         table, th, tr, td {
            background-color: white; border-collapse: collapse; border: 3px double black; padding: 2px 4px; text-align: center; margin: auto;
         }
-        #avatar{
+        #avatar {
             width: 100px; height: 100px; border-radius: 50px;
         }
         #formModif, #imc {
@@ -26,26 +26,27 @@
         }
     
     </style>
+
     <h1><%= message %></h1>
                
-        <div><img id="avatar" src="<%= results.avatar %>"></div>
-        <a href="/login"><input id="deco" type="button" value="Déconnexion"></a>
-        <!-- "<%= results.id_user %>" -->
-        <form id="delete" method="post" action="/deleteUser">
-            <input type="hidden" id="id" name="id" value="<%= results.id_user %>">
-            <button>delete</button>
-        </form>
-        <input id="modif" type="button" value="Modifier mon profil">
-        <p>Mon poids : <%= results.poids %>Kg</p>
-        <input type="hidden" id="poids" value="<%= results.poids %>"> 
-        <p>Ma taille : <%= results.taille %>M</p>
-        <input type="hidden" id="taille" value="<%= results.taille %>"> 
-        <p>Mon objectif : <%= results.objectif %>Kg</p><br>
-        <input id="button" type="button" value="get imc" ><br><br>
-        <div id="imc"> </div>
+    <div><img id="avatar" src="<%= results.avatar %>"></div>
+    <a href="/login"><input id="deco" type="button" value="Déconnexion"></a>
+    <!-- "<%= results.id_user %>" -->
+    <form id="delete" method="post" action="/deleteUser">
+        <input type="hidden" id="id" name="id" value="<%= results.id_user %>">
+        <button>delete</button>
+    </form>
+    <input id="modif" type="button" value="Modifier mon profil">
+    <p>Mon poids : <%= results.poids %>Kg</p>
+    <input type="hidden" id="poids" value="<%= results.poids %>"> 
+    <p>Ma taille : <%= results.taille %>M</p>
+    <input type="hidden" id="taille" value="<%= results.taille %>"> 
+    <p>Mon objectif : <%= results.objectif %>Kg</p>
+    <input id="button" type="button" value="get imc">
+    <div id="imc"></div>
         
         
-        <div>
+    <div>
         <form id="formModif" method="post" action="/update">
             <input type="hidden" id="id" name="id" value="<%= results.id_user %>"> 
             <label>Nom : </label>
@@ -68,11 +69,47 @@
             <input type="text" id="avatar1" name="avatar1" value="<%= results.avatar %>" required>
             <button>Modifier</button>
          </form>
-        </div>
+    </div>
 
-     <script>
+    <div>
+        <!-- Diagramme circulaire affichant les activités effectuées par l'utilisateur -->
+        <canvas id="diagramme-activite"></canvas>
+    </div>
+      
+    <!-- librairie pour faire des diagrammes -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <script>
+    const diagrammeAct = document.getElementById('diagramme-activite');
+    
+    new Chart(diagrammeAct, {
+        type: 'doughnut',
+        radius: '50%',
+        data: {
+            labels: [
+                'Red',
+                'Blue',
+                'Yellow'
+            ],
+            datasets: [{
+                label: 'My First Dataset',
+                data: [300, 50, 100],
+                backgroundColor: [
+                'rgb(255, 99, 132)',
+                'rgb(54, 162, 235)',
+                'rgb(255, 205, 86)'
+                ],
+                hoverOffset: 4
+            }]
+        }
+    });
+    </script>
+      
+
+    <script>
         // à la connexion, on récupère les données de l'utilisateur à enregistrer dans le cache
         let user = <%- JSON.stringify(storage) %>;
+        // si l'utilisateur est déjà loggé
         if (user) { 
             // on les envoie dans le session storage
             sessionStorage.setItem('loggedIn', JSON.stringify(user)); 

@@ -67,8 +67,11 @@ app.get('/', (req, res) => {
 // route vers le dashboard admin
 app.get('/admin', (req, res) => {
     // comment vérifier dans le cache que le client est admin avant d'arriver ici ??
+    // problème : vu que l'admin est directement redirigé ici la connexion, il n'est pas stocké dans le session storage
+
     // requête pour récupérer les données de tous les utilisateurs
     let queryAllUsers = "SELECT user_pseudo AS Pseudo, name AS Nom, prenom AS Prénom, tel AS Téléphone, taille AS Taille, poids AS Poids, objectif AS Objectif, pass AS MDP, autorisation AS Droits FROM user;";
+    
     // connexion à la BDD
     con.connect((err) => {
         if (err) throw err;
@@ -110,14 +113,14 @@ app.post('/signin', (req,res) => {
             if (!results.length){
                 let userStorage = {
                     'username': pseudo,
-                    // 'rights': results[0].autorisation
+                    'rights': results[0].autorisation
                 }
                 // on peut ++ l'utilisateur à la BDD
                 // let myquery = 'ALTER TABLE user AUTO_INCREMENT = MAX(id_user) ;' 
                 let myquery = "INSERT INTO user (name, prenom, tel, poids, taille, objectif, pass, user_pseudo, avatar) VALUES (?,?,?,?,?,?,?,?,?) "
                 con.connect((err)=>{
                     if (err) throw err;
-                    con.query(myquery, [name, prenom, tel, poids, taille, objectif, pass, pseudo, avatar], (err,results)=>{
+                    con.query(myquery, [name, prenom, tel, poids, taille, objectif, pass, pseudo, avatar], (err,results) => {
                         let queryUser = "SELECT * FROM user WHERE user_pseudo = ? AND pass = ?;";
                         con.query(queryUser, [pseudo, pass], (err, results) => {
                            // console.log(results[0])
