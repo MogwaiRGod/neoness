@@ -29,7 +29,7 @@
     <h1><%= message %></h1><br>
                
         <div><img id="avatar" src="<%= results.avatar %>"></div>
-        <a href="/sport_login"><input id="deco" type="button" value="deconection"></a>
+        <a href="/login"><input id="deco" type="button" value="deconection"></a>
         <input id="modif" type="button" value="Modifier mon profil">
         <p>Mon poids : <%= results.poids %>Kg</p>
         <input type="hidden" id="poids" value="<%= results.poids %>"> 
@@ -41,7 +41,7 @@
         
         
         <div>
-        <form id="formModif" method="post" action="/modifProfil">
+        <form id="formModif" method="post" action="/update">
             <input type="hidden" id="id" name="id" value="<%= results.id_user %>"> 
             <% console.log(results.id_user) %>
             <label>name : </label> <input type="text" id="name" name="name" value="<%= results.nom %>" required><br>
