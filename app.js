@@ -86,10 +86,6 @@ app.get('/admin', (req, res) => {
     }); // fin con.connect
 }); // fin GET /admin
 
-app.get('/signin', (req,res) => {
-    res.render('sport_create_user', {'title': 'Sign In', 'message': 'Inscription' })
-})
-
 app.post('/sport_create_user', (req,res) => {
     console.log(req.body);
     let name = req.body.name;
@@ -136,7 +132,7 @@ app.post('/sport_create_user', (req,res) => {
             }
             // sinon, on envoie un message d'erreur
             else {
-                res.render('sport_create_user', {'title': 'Sign In', 'message': 'Inscription', 'erreur': "Pseudo déjà attribué" })
+                res.render('sport_login', {'title': 'Sign In', 'message': 'Inscription', 'erreur': "Pseudo déjà attribué" })
             }
         }); // fin con.query
 
@@ -147,7 +143,7 @@ app.post('/sport_create_user', (req,res) => {
 
 
 app.get('/sport_login', (req,res) => {
-    res.render("sport_login", {'title': 'Log In', 'message': 'Veuillez entrer vos identifiants afin de vous connecter'})
+    res.render("sport_login", {'title': 'Log In', 'message': 'Veuillez entrer vos identifiants afin de vous connecter', 'erreur':""})
 })
 
 
@@ -181,7 +177,7 @@ app.post('/confirm', (req,res) => {
                     'results': results[0]
                 });
             } else {
-                res.render('sport_login' , { 'title' : 'Login', 'message' : 'Identifiant incorrect'})
+                res.render('sport_login' , { 'title' : 'Login', 'message': "Connexion", 'erreur' : 'Identifiant incorrect'})
             }
         });
     });
