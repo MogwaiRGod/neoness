@@ -1,11 +1,12 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><%= title %></title>
 </head>
+
 <body>
     <style>
         html {
@@ -28,24 +29,33 @@
     </style>
 
     <h1><%= message %></h1>
-               
+    
+    <!-- Affichage des données utilisateur -->
     <div><img id="avatar" src="<%= results.avatar %>"></div>
+    
     <a href="/login"><input id="deco" type="button" value="Déconnexion"></a>
-    <!-- "<%= results.id_user %>" -->
+    
+    <!-- Bouton permettant à l'utilisateur de supprimer son compte -->
     <form id="delete" method="post" action="/deleteUser">
         <input type="hidden" id="id" name="id" value="<%= results.id_user %>">
         <button>delete</button>
     </form>
+    
+    <!-- Bouton permettant au client de modifier ses informations -->
     <input id="modif" type="button" value="Modifier mon profil">
+    
+    <!-- Données utilisateur -->
     <p>Mon poids : <%= results.poids %>Kg</p>
     <input type="hidden" id="poids" value="<%= results.poids %>"> 
     <p>Ma taille : <%= results.taille %>M</p>
     <input type="hidden" id="taille" value="<%= results.taille %>"> 
     <p>Mon objectif : <%= results.objectif %>Kg</p>
+    <!-- Bouton enclenchant le calcul de l'IMC -->
     <input id="button" type="button" value="get imc">
-    <div id="imc"></div>
+    <!-- Paragraphe qui afficherat le résultat du calcul de l'IMC -->
+    <p id="imc"></p>
         
-        
+    <!-- Div de modification des données utilisateur (cachée par défaut) -->
     <div>
         <form id="formModif" method="post" action="/update">
             <input type="hidden" id="id" name="id" value="<%= results.id_user %>"> 
@@ -70,7 +80,8 @@
             <button>Modifier</button>
          </form>
     </div>
-
+    
+    <!-- DIAGRAMMES A FAIRE
     <div>
         <!-- Diagramme circulaire affichant les activités effectuées par l'utilisateur -->
         <canvas id="diagramme-activite"></canvas>
@@ -103,18 +114,20 @@
             }]
         }
     });
-    </script>
+    </script> 
+        -->
       
 
     <script>
         // à la connexion, on récupère les données de l'utilisateur à enregistrer dans le cache
         let user = <%- JSON.stringify(storage) %>;
-        // si l'utilisateur est déjà loggé
+        // si l'utilisateur n'est PAS déjà loggé
         if (user) { 
             // on les envoie dans le session storage
             sessionStorage.setItem('loggedIn', JSON.stringify(user)); 
         }
-   
+        
+        // event listener pour le calcul de l'IMC
         button.addEventListener('click', () => {
             let poids = document.getElementById('poids').value;
             let taille = document.getElementById('taille').value;
@@ -143,7 +156,7 @@
         });
 
         let imc = document.getElementById('imc');
-        // affiche/cache l''IMC au clic du bouton
+        // affiche/cache l'IMC au clic du bouton
         button.addEventListener('click', () => {
             if (imc.style.display === "block"){
                 imc.style.display = "none";
