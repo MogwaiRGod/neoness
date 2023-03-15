@@ -88,10 +88,10 @@
     <!-- </div> -->
       
     <!-- librairie pour faire des diagrammes -->
-    <!-- <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> -->
+    <!-- <script src="https://cdn.jsdelivr.net/npm/chart.js"><git reset --hard master@{"10 minutes ago"}/script> -->
     
-    <!-- <script> -->
-        const diagrammeAct = document.getElementById('diagramme-activite');
+    <script>
+        /* const diagrammeAct = document.getElementById('diagramme-activite');
         
         new Chart(diagrammeAct, {
             type: 'doughnut',
@@ -113,10 +113,8 @@
                     hoverOffset: 4
                 }]
             }
-        });
-    <!-- </script> -->
+        }); */
 
-    <script>
         // à la connexion, on récupère les données de l'utilisateur à enregistrer dans le cache
         let user = <%- JSON.stringify(storage) %>;
         // si l'utilisateur n'est PAS déjà loggé

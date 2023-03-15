@@ -41,7 +41,7 @@ app.set(express.static("public"));
 // instanciation de la connexion à la BDD
 const con = mysql.createConnection({
     /* A VERIFIER */
-    host:'172.17.0.2',
+    host:'172.17.0.3',
     /* A MODIFIER */
     user:'pedrolove',
     /* A MODIFIER */
