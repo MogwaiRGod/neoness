@@ -18,10 +18,14 @@
     
     <!-- Formulaire de connexion -->
     <form id="log" method="post" action="/confirm">
-        <label for="name">Username : </label>
-        <input type="text" id="username" name="pseudo" value="killard" required>
-        <label for="pass">Password : </label>
-        <input type="password" id="pass" name="pass" value="azerty" required>
+        <div>
+            <label for="name">Username : </label>
+            <input type="text" id="username" name="pseudo" value="killard" required>
+        </div>
+        <div>
+            <label for="pass">Password : </label>
+            <input type="password" id="pass" name="pass" value="azerty" required>
+        </div>
         <button id="connect">Log in</button>
         <input type="button" id="signin" value="sign in">
    </form>
@@ -29,14 +33,37 @@
 
     <!-- Formulaire d'inscription : caché par défaut -->
     <form id="formCreate" method="post" action="/signin">
-        <label>name : </label> <input type="text" id="name" name="name" required>
-        <label>pseudo : </label> <input type="text" id="pseudo" name="pseudo" required>
-        <label>pass : </label>  <input type="password" id="pass" name="pass" required>
-        <label>prenom : </label>  <input type="text" id="prenom" name="prenom" required>
-        <label>tel : </label>  <input type="tel" id="tel" name="tel" required><br>
-        <label>poids : </label>  <input type="number" step="0.01" id="poids" name="poids" required>
-        <label>taille : </label>  <input type="number" step="0.01" id="taille" name="taille" required>
-        <label>objectif : </label>  <input type="number" step="0.01" id="objectif" name="objectif" required>
+        <div>
+            <label>name : </label>
+            <input type="text" id="name" name="name" required>
+        </div>
+        <div> 
+            <label>pseudo : </label>
+            <input type="text" id="pseudo" name="pseudo" required>
+        </div>
+       <div>
+            <label>pass : </label>
+            <input type="password" id="pass" name="pass" required>
+       </div>
+            <label>prenom : </label>
+            <input type="text" id="prenom" name="prenom" required>
+       <div>
+        <div>
+            <label>tel : </label>
+            <input type="tel" id="tel" name="tel" required>
+        </div>
+        <div>
+            <label>poids : </label>
+            <input type="number" step="0.01" id="poids" name="poids" required>
+        </div>
+        <div>
+            <label>taille : </label>
+            <input type="number" step="0.01" id="taille" name="taille" required>
+        </div>
+        <div>
+            <label>objectif : </label>
+            <input type="number" step="0.01" id="objectif" name="objectif" required>
+        </div>        
         <input type="hidden" id="avatar" name="avatar" value="https://cdn-icons-png.flaticon.com/128/1077/1077114.png">
         <aside><%= erreur %></aside>
         <button>New User</button>
