@@ -115,13 +115,6 @@ app.post('/signin', (req,res) => {
 
             // si la requête n'a pas retourné de résultat <=> si le pseudo est libre
             if (!results.length){
-                // création d'un objet JSON contenant les informations essentielles de l'utilisateur connecté ;
-                // cet objet va servir de cache dans le session storage client
-                let userStorage = {
-                    'id_user': results[0].id_user,
-                    'username': results[0].pseudo,
-                    'rights': results[0].autorisation
-                }
                 // on peut ++ l'utilisateur à la BDD
                 // let myquery = 'ALTER TABLE user AUTO_INCREMENT = MAX(id_user) ;' 
                 // requête d'ajout utilisateur
@@ -134,7 +127,13 @@ app.post('/signin', (req,res) => {
                         // on va immédiatement connecté l'utilisateur
                         let queryUser = "SELECT * FROM user WHERE user_pseudo = ? AND pass = ?;";
                         con.query(queryUser, [pseudo, pass], (err, results) => {
-                           // console.log(results[0])
+                        // création d'un objet JSON contenant les informations essentielles de l'utilisateur connecté ;
+                        // cet objet va servir de cache dans le session storage client
+                        let userStorage = {
+                            'id_user': results[0].id_user,
+                            'username': results[0].pseudo,
+                            'rights': results[0].autorisation
+                        }
                             // on envoi l'utilisateur à la page d'accueil
                             res.render('welcome', { 'title': 'Accueil', 
                                 'message': `Welcome ${prenom}`,
