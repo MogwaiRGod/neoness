@@ -40,10 +40,10 @@ app.set(express.static("public"));
 
 // instanciation de la connexion à la BDD
 const con = mysql.createConnection({
-    host:'172.17.0.2',
-    user:'pedrolove',
-    password:'ThePassword',
-    database: DB,
+    host:'172.17.0.3',
+    user:'Killard',
+    password:'MikaKillard95',
+    database:'sport',
     multipleStatements: true
 });
 
@@ -262,45 +262,16 @@ app.post('/seance', (req,res)=>{
     myquery += "INNER JOIN activite_physique ON activite_physique.id_activite_physique = seance.id_activite " ;
     myquery += "INNER JOIN user ON user.id_user = seance.id_user " ;
     myquery += `WHERE user.id_user=${id}`
-    // console.log(myquery)
+    console.log(myquery)
     con.connect((err)=>{
         if (err) throw err;
         con.query(myquery, (err,results)=>{
             if (err) throw err;
-            // console.log(results)
+            console.log(results)
             res.render('sport_seance', {'title': 'liste de vos séances', 'results' : results})
         });
     });
 }); //fin POST /seance
-
-app.post('/newSeance', (req,res)=>{
-    // console.log(req.body)
-    let time = req.body.time;
-    let date = req.body.date;
-    let id = req.body.id;
-    let idActivite = req.body.id_activite_physique;
-    let myqueryAdd = `INSERT INTO seance (time, date, id_user, id_activite) VALUES (?,?,?,?)`;
-    // console.log(myqueryAdd);
-    con.connect((err) => {
-        if (err) throw err;
-        con.query(myqueryAdd, [time, date, id, idActivite ], (err,results) => {
-            // console.log(results);
-            if (err) throw err;
-            let myquery = "SELECT user.id_user, user.avatar, user.user_pseudo, type, image, time, DATE_FORMAT(date, '%W %e %M %Y') AS date FROM seance " ;
-            myquery += "INNER JOIN activite_physique ON activite_physique.id_activite_physique = seance.id_activite " ;
-            myquery += "INNER JOIN user ON user.id_user = seance.id_user " ;
-            myquery += `WHERE user.id_user=${id}`;            
-            con.connect((err)=>{
-                if (err) throw err;
-                con.query(myquery, (err,results)=>{
-                    if (err) throw err;
-                    // console.log(results)
-                    res.render('sport_seance', {'title': 'liste de vos séances', 'results' : results})
-                })
-            })
-        })
-    })
-})
 
 app.get('/activity', (req,res)=>{
     let myquery = "SELECT * FROM activite_physique ";
@@ -312,6 +283,11 @@ app.get('/activity', (req,res)=>{
         });
     });
 });
+
+
+
+
+
 
 
 /**
