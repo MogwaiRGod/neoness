@@ -318,10 +318,15 @@ app.post('/newSeance', (req,res)=>{
             myquery += "ORDER BY DATE_FORMAT(date, '%Y%c') ";
             con.connect((err)=>{
                 if (err) throw err;
-                con.query(myquery, (err,results)=>{
-                    if (err) throw err;
-                    // console.log(results)
-                    res.render('sport_seance', {'title': 'liste de vos séances', 'results' : results})
+                con.query(myquery, (err,results) => {
+                    let seances = results;
+                    let queryUser = `SELECT * FROM user WHERE id_user = ${id}`;
+                    con.query(queryUser, (err, results) => {
+                        if (err) throw err;
+                        // console.log(results)
+                        res.render('sport_seance', {'title': 'liste de vos séances', 'results' : seances, 'message': "", "user_info": results[0]});
+                    })
+                    
                 })
             })
         })
