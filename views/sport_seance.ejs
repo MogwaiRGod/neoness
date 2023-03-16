@@ -29,8 +29,10 @@
             border: 2px solid slategrey; border-collapse: collapse; text-align: center; margin: auto;
         }
     </style>
-    <h1>Les séances de <%=results[0].user_pseudo %></h1>
-    <img id="avatar" src="<%= results[0].avatar %>">
+    <h1>Les séances de <%= user_info.prenom %></h1>
+    <img id="avatar" src="<%= user_info.avatar %>">
+
+    <div><%= message %></div><br><br>
     <table id="tabSeance">
             <tr>
                 <th>logo</th>
@@ -55,14 +57,11 @@
         <form>
         <label for="type">Type : </label>
         <select name="id_activite_physique" id="affich"></select>
-        <button id="addSeance" type="submit">Ajouter une nouvelle séance</button>
+        <button id="addSeance" >Ajouter une nouvelle séance</button>
     </form>
-
-  </form>
 
     <script>        
         window.addEventListener('load', () => {
-
             let affich = document.getElementById('affich');
             fetch('/activity')
             .then(res => res.text())

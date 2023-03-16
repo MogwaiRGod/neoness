@@ -43,11 +43,10 @@ const con = mysql.createConnection({
     host:'172.17.0.2',
     user:'pedrolove',
     password:'ThePassword',
-    database: DB,
+    database:'neoness',
     multipleStatements: true
 });
 
-// connexion test à la BDD
 con.connect((err) => {
     if (err) throw err;
     console.log(`Connecté à la BDD ${DB}`);
@@ -254,26 +253,53 @@ app.post('/deleteUser', (req,res) => {
 
 
 
-// Route pour afficher les séances d'un utilisateur //
-app.post('/seance', (req,res)=>{
+app.post('/seance', (req,res) => {
     let id = req.body.id;
-    let myquery = "SELECT user.id_user, user.avatar, user.user_pseudo, type, image, time, DATE_FORMAT(date, '%W %e %M %Y') AS date FROM seance " ;
-    myquery += "INNER JOIN activite_physique ON activite_physique.id_activite_physique = seance.id_activite " ;
-    myquery += "INNER JOIN user ON user.id_user = seance.id_user " ;
-    myquery += `WHERE user.id_user=${id}`
-    // console.log(myquery)
+    let myqueryActFav = "SELECT type AS fav, SUM(time) AS time FROM activite_physique ";
+    myqueryActFav += "INNER JOIN seance ON seance.id_activite = activite_physique.id_activite_physique ";
+    myqueryActFav += "INNER JOIN user ON user.id_user = seance.id_user ";
+    myqueryActFav += `WHERE seance.id_user=${id} `;
+    myqueryActFav += "GROUP BY fav ";
+    myqueryActFav += "ORDER BY time DESC ";
+    console.log(myqueryActFav)
     con.connect((err)=>{
         if (err) throw err;
-        con.query(myquery, (err,results)=>{
-            if (err) throw err;
-            // console.log(results)
-            res.render('sport_seance', {'title': 'liste de vos séances', 'results' : results})
+        con.query(myqueryActFav, (err,results) => {
+            if(err) throw err;
+            console.log(results);
+            let message = "";
+            if (results.length>0){
+                message = `Votre activité favorite est : ${results[0].fav}, avec un total de durée de séance de ${results[0].time} minutes.`
+                console.log(results[0].fav);
+            } else {
+                message = "Vous n'avez renseigné aucune activité.";
+            }
+            console.log(message);
+            let myquery = "SELECT user.id_user, user.avatar, user.user_pseudo, type, image, time, DATE_FORMAT(date, '%W %e %M %Y') AS date FROM seance " ;
+            myquery += "INNER JOIN activite_physique ON activite_physique.id_activite_physique = seance.id_activite " ;
+            myquery += "INNER JOIN user ON user.id_user = seance.id_user " ;
+            myquery += `WHERE user.id_user=${id} `;
+            myquery += `ORDER BY DATE_FORMAT(date, '%Y%c%d') `;
+            con.query(myquery, (err,results) => {
+                let seances = results;
+                let queryUser = `SELECT * FROM user WHERE id_user = ${id}`;
+                console.log(queryUser)
+                con.query(queryUser, (err, results) => {
+                    console.log(results)
+                    if (seances.length>0) {
+                        if (err) throw err;
+                        res.render('sport_seance', {'title': 'liste de vos séances', 'results' : seances, 'message': message, "user_info": results[0] });
+                    } else {
+                        res.render('sport_seance', {'title': 'liste de vos séances', 'results' : [], 'message': message, "user_info": results[0] })
+                    }
+                })
+            });
         });
     });
 }); //fin POST /seance
 
 app.post('/newSeance', (req,res)=>{
-    // console.log(req.body)
+    // console.log(req.body) 
     let time = req.body.time;
     let date = req.body.date;
     let id = req.body.id;
@@ -288,7 +314,8 @@ app.post('/newSeance', (req,res)=>{
             let myquery = "SELECT user.id_user, user.avatar, user.user_pseudo, type, image, time, DATE_FORMAT(date, '%W %e %M %Y') AS date FROM seance " ;
             myquery += "INNER JOIN activite_physique ON activite_physique.id_activite_physique = seance.id_activite " ;
             myquery += "INNER JOIN user ON user.id_user = seance.id_user " ;
-            myquery += `WHERE user.id_user=${id}`;            
+            myquery += `WHERE user.id_user=${id} `            
+            myquery += "ORDER BY DATE_FORMAT(date, '%Y%c') ";
             con.connect((err)=>{
                 if (err) throw err;
                 con.query(myquery, (err,results)=>{
