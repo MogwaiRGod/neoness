@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+</head>
+<body>
+    <style>
+         html {
+            color: darkblue; background-color: cornsilk; background-image: url(''); background-repeat: no-repeat; background-size: 100% 100%; text-align: center; animation: move 3s linear;
+        }
+        table, th, tr, td {
+           background-color: white; border-collapse: collapse; border: 3px double black; padding: 2px 4px; text-align: center; margin: auto;
+        }
+        #avatar{
+            width: 100px; height: 100px; border-radius: 50px;
+        }
+        #logo {
+            width: 20px; height: 20px; border-radius: 50px;
+        }
+       
+        @keyframes move {
+            from {opacity: 0;}
+            to {opacity: 1;}
+        }
+        #tabSeance, th, tr, td {
+            border: 2px solid slategrey; border-collapse: collapse; text-align: center; margin: auto;
+        }
+    </style>
+    <h1>Les séances de <%= results[0].user_pseudo %></h1>
+    <img id="avatar" src="<%= results[0].avatar %>">
+
+    <div>Votre activité préférée : <%= fav %>, avec <%= time %> minutes de pratique .</div><br><br>
+    <table id="tabSeance">
+            <tr>
+                <th>logo</th>
+                <th>type</th>
+                <th>date</th>
+                <th>time</th>
+            </tr>
+        <% results.forEach(function (item) { %>
+        <tr>
+            <td><img id="logo" src="<%= item.image %>"></td>
+            <td><%= item.type %></td>
+            <td><%= item.date %></td>
+            <td><%= item.time %> minutes</td>
+        </tr>
+        <% }) %>
+    </table>
+    <br><br>
+  <form method="post" action="/newSeance">
+        <input type="hidden" id="id" name="id">
+        <label for="date">Date : </label><input type="date" id="date" name="date">
+        <label for="time">Durée : </label><input type="number" id="time" name="time">
+        <form>
+        <label for="type">Type : </label>
+        <select name="id_activite_physique" id="affich"></select>
+        <button id="addSeance" >Ajouter une nouvelle séance</button>
+    </form>
+
+    <script>        
+        window.addEventListener('load', () => {
+            let affich = document.getElementById('affich');
+            fetch('/activity')
+            .then(res => res.text())
+            .then(res => {
+                myresults = JSON.parse(res)
+                myresults.forEach((item)=>{
+                    let opt = document.createElement('option');
+                    opt.name = item.id_activite_physique;                    
+                    opt.value = item.id_activite_physique;                    
+                    opt.text = item.type;  
+                    console.log( item.id_activite_physique)                  
+                    affich.add(opt);
+                });
+            });
+        });
+        let cache_user = JSON.parse(sessionStorage.getItem('loggedIn'));
+        document.getElementById("id").value = cache_user.id_user ;
+
+    </script>
+</body>
+</html>
