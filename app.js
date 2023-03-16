@@ -237,6 +237,7 @@ app.post('/update', (req, res) => {
     });
 }); // fin POST /update
 
+
 /* DELETE */
 // route supprimant un client de la BDD et le redirigeant vers la page de login
 app.post('/deleteUser', (req,res) => {
@@ -251,8 +252,7 @@ app.post('/deleteUser', (req,res) => {
     });
 }); // fin POST /deleteUser
 
-
-
+// route permettant d'afficher les séances de l'utilisateur, ainsi que son activité favorite 
 app.post('/seance', (req,res) => {
     let id = req.body.id;
     let myqueryActFav = "SELECT type AS fav, SUM(time) AS time FROM activite_physique ";
@@ -261,12 +261,12 @@ app.post('/seance', (req,res) => {
     myqueryActFav += `WHERE seance.id_user=${id} `;
     myqueryActFav += "GROUP BY fav ";
     myqueryActFav += "ORDER BY time DESC ";
-    console.log(myqueryActFav)
+
     con.connect((err)=>{
         if (err) throw err;
         con.query(myqueryActFav, (err,results) => {
             if(err) throw err;
-            console.log(results);
+
             let message = "";
             if (results.length>0){
                 message = `Votre activité favorite est : ${results[0].fav}, avec un total de durée de séance de ${results[0].time} minutes.`
@@ -274,18 +274,18 @@ app.post('/seance', (req,res) => {
             } else {
                 message = "Vous n'avez renseigné aucune activité.";
             }
-            console.log(message);
+
             let myquery = "SELECT user.id_user, user.avatar, user.user_pseudo, type, image, time, DATE_FORMAT(date, '%W %e %M %Y') AS date FROM seance " ;
             myquery += "INNER JOIN activite_physique ON activite_physique.id_activite_physique = seance.id_activite " ;
             myquery += "INNER JOIN user ON user.id_user = seance.id_user " ;
             myquery += `WHERE user.id_user=${id} `;
             myquery += `ORDER BY DATE_FORMAT(date, '%Y%c%d') `;
+
             con.query(myquery, (err,results) => {
                 let seances = results;
                 let queryUser = `SELECT * FROM user WHERE id_user = ${id}`;
-                console.log(queryUser)
+
                 con.query(queryUser, (err, results) => {
-                    console.log(results)
                     if (seances.length>0) {
                         if (err) throw err;
                         res.render('sport_seance', {'title': 'liste de vos séances', 'results' : seances, 'message': message, "user_info": results[0] });
@@ -298,40 +298,44 @@ app.post('/seance', (req,res) => {
     });
 }); //fin POST /seance
 
+// route recevant un formulaire de nouvelle séance de sport
 app.post('/newSeance', (req,res)=>{
-    // console.log(req.body) 
     let time = req.body.time;
     let date = req.body.date;
     let id = req.body.id;
     let idActivite = req.body.id_activite_physique;
     let myqueryAdd = `INSERT INTO seance (time, date, id_user, id_activite) VALUES (?,?,?,?)`;
-    // console.log(myqueryAdd);
+    
+    // connexion BDD 
     con.connect((err) => {
         if (err) throw err;
+        // envoi de la requête d'ajout
         con.query(myqueryAdd, [time, date, id, idActivite ], (err,results) => {
-            // console.log(results);
             if (err) throw err;
-            let myquery = "SELECT user.id_user, user.avatar, user.user_pseudo, type, image, time, DATE_FORMAT(date, '%W %e %M %Y') AS date FROM seance " ;
+
+            let myquery = "SELECT type, image, time, DATE_FORMAT(date, '%W %e %M %Y') AS date FROM seance " ;
             myquery += "INNER JOIN activite_physique ON activite_physique.id_activite_physique = seance.id_activite " ;
             myquery += "INNER JOIN user ON user.id_user = seance.id_user " ;
             myquery += `WHERE user.id_user=${id} `            
             myquery += "ORDER BY DATE_FORMAT(date, '%Y%c') ";
+
             con.connect((err)=>{
                 if (err) throw err;
+
                 con.query(myquery, (err,results) => {
                     let seances = results;
                     let queryUser = `SELECT * FROM user WHERE id_user = ${id}`;
+
                     con.query(queryUser, (err, results) => {
                         if (err) throw err;
                         // console.log(results)
                         res.render('sport_seance', {'title': 'liste de vos séances', 'results' : seances, 'message': "", "user_info": results[0]});
-                    })
-                    
-                })
-            })
-        })
-    })
-})
+                    });
+                });
+            });
+        });
+    });
+});
 
 app.get('/activity', (req,res)=>{
     let myquery = "SELECT * FROM activite_physique ";
