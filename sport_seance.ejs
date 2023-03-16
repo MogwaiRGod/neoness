@@ -32,7 +32,7 @@
     <h1>Les séances de <%= results[0].user_pseudo %></h1>
     <img id="avatar" src="<%= results[0].avatar %>">
 
-    <div>Votre activité préférée : <%= fav %>, avec <%= time %> minutes de pratique .</div><br><br>
+    <div><%= item.message %></div><br><br>
     <table id="tabSeance">
             <tr>
                 <th>logo</th>
@@ -77,6 +77,9 @@
                 });
             });
         });
+
+       
+
         let cache_user = JSON.parse(sessionStorage.getItem('loggedIn'));
         document.getElementById("id").value = cache_user.id_user ;
 

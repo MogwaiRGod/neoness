@@ -267,9 +267,17 @@ app.post('/seance', (req,res)=>{
         if (err) throw err;
         con.query(myqueryActFav, (err,results)=>{
             if(err) throw err;
-            let fav = results[0].fav;
-            let time = results[0].time;
+            console.log(results)
+         
+            let message = ""
+            if (results.length>0){
+            message = `Votre activité favorite est : ${results[0].fav}, avec un total de durée de séance de ${results[0].time} minutes.`
             console.log(results[0].fav);
+            } else {
+            message = "Vous n'avez renseigné aucune activitées."
+            }
+            console.log(message)
+            
 
     let myquery = "SELECT user.id_user, user.avatar, user.user_pseudo, type, image, time, DATE_FORMAT(date, '%W %e %M %Y') AS date FROM seance " ;
     myquery += "INNER JOIN activite_physique ON activite_physique.id_activite_physique = seance.id_activite " ;
@@ -277,19 +285,14 @@ app.post('/seance', (req,res)=>{
     myquery += `WHERE user.id_user=${id} `
     myquery += `ORDER BY DATE_FORMAT(date, '%Y%c%d') `;
 
-    // console.log(myquery)
     con.connect((err)=>{
         if (err) throw err;
         con.query(myquery, (err,results)=>{
             if (err) throw err;
-                    if (fav.length > 0){
-                        res.render('sport_seance', {'title': 'liste de vos séances', 'results' : results, 'fav': fav, 'time': time})
-                    } else {
-                        res.render('sport_seance', {'title': 'liste de vos séances', 'results' : results, 'fav':'', 'time':''})
-                    }
+            console.log(results)
+                        res.render('sport_seance', {'title': 'liste de vos séances', 'results' : results, 'message': message  })
                 })
             })
-            // console.log(results)
         });
     });
 }); //fin POST /seance
