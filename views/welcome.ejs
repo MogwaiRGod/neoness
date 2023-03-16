@@ -20,11 +20,16 @@
         }
         #formModif, #imc {
             display: none;
+            flex-direction: column ;
+            width: 15%;
+            margin-left: 42.5%;
         }
+      
         @keyframes move {
             from {opacity: 0;}
             to {opacity: 1;}
         }
+      
     
     </style>
 
@@ -32,8 +37,9 @@
     
     <!-- Affichage des données utilisateur -->
     <div><img id="avatar" src="<%= results.avatar %>"></div>
+    <div id="flexDiv">
     <!-- Bouton de déconnection, renvoi à la page de login -->
-    <a href="/login"><input id="deco" type="button" value="Déconnexion"></a>
+    <a href="/login"><input id="deco" name="" type="button" value="Déconnexion"></a>
     
     <!-- Bouton permettant à l'utilisateur de supprimer son compte -->
     <form id="delete" method="post" action="/deleteUser">
@@ -49,6 +55,7 @@
         <input type="hidden" id="id" name="id" value="<%= results.id_user %>"> 
         <button>Mes séances</button>
     </form>
+</div>
 
     <!-- Données utilisateur -->
     <p>Mon poids : <%= results.poids %>Kg</p>
@@ -84,7 +91,7 @@
             <label>Avatar : </label>
             <input type="text" id="avatar1" name="avatar1" value="<%= results.avatar %>" required>
             <button>Modifier</button>
-         </form>
+        </form>
     </div>
     
     <!-- DIAGRAMMES A FAIRE -->
@@ -150,10 +157,10 @@
         let form = document.getElementById('formModif');
         // affiche/cache le formulaire de modification du profil au clic du bouton
         modif.addEventListener('click', () => {
-            if (form.style.display === "block"){
+            if (form.style.display === "flex"){
                 form.style.display = "none";
             } else {
-                form.style.display = "block";
+                form.style.display = "flex";
             }
         });
 
