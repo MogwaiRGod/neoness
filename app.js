@@ -15,7 +15,7 @@ const ejs = require('ejs');
  * CONSTANTES
  */
 // nom de la BDD
-const DB = "neoness"; /* A REMPLIR */
+const DB = "sport"; /* A REMPLIR */
 const HOST = '0.0.0.0';
 const PORT = 8080;
 
@@ -41,9 +41,9 @@ app.set(express.static("public"));
 // instanciation de la connexion à la BDD
 const con = mysql.createConnection({
     host:'172.17.0.3',
-    user:'Killard',
-    password:'MikaKillard95',
-    database:'sport',
+    user: ''/* A REMPLIR */,
+    password: '' /* A REMPLIR */,
+    database: DB,
     multipleStatements: true
 });
 
