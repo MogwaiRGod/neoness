@@ -26,4 +26,5 @@ Diane ([MogwaiRGod](https://github.com/MogwaiRGod)) et Michael ([killard95](http
 <hr>
 
 # Fonctionnement
-Site-web permettant aux clients de se connecter afin de suivre leur poids, IMC, objectifs de poids et de mettre à jour leur séances de sport.
+Site-web permettant aux clients de se connecter afin de suivre leur poids, IMC, objectif de poids et de mettre à jour leur séances de sport.
+L'application gère un CRUD de base pour la gestion des utilisateurs et de leurs séance.
