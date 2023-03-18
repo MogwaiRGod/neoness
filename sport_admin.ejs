@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+  <html lang="fr">
+
+  <head>
+    <meta charset="utf-8">
+    <!-- <title><%= title %></title> -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- <link rel="stylesheet" href="style/root.css"> -->
+    <!-- <link rel="stylesheet" href="style/style.css"> -->
+  </head>
+
+  <body>
+    <div id="container">
+        <h1><%= title %></h1>
+
+        <table>
+          <!-- On réupère le nom des champs de la table use -->
+            <% const fields = Object.getOwnPropertyNames(results[0]); %>
+            <tr>
+            <!-- on boucle dans les champs pour écrire le header -->
+            <% fields.forEach(field => { %>
+              <th><%= field %></th>
+            <% }); %>
+          </tr>
+          <tbody>
+              <!-- On boucle dans les utilisateurs pour remplir la table -->
+              <% results.forEach(user => { %>
+              <!-- On autorise la modification directe du contenu de la table -->
+               <tr contenteditable="true">
+                  <!-- On boucle dans les champs utilisateurs selon le nom des champs -->
+                  <% fields.forEach(field => { %>
+                    <td><%= user[field] %></td>
+                  <% }); %>
+              <% }); %>
+            </tr>
+          </tbody>
+        </table>
+
+    </div>
+
+    <script>
+        
+    </script>
+  </body>
+</html>

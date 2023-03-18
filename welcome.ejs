@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+</head>
+
+<body>
+    <style>
+    
+        html {
+            color: darkblue; background-color: cornsilk; text-align: center; animation: move 3s linear;
+        }
+        table, th, tr, td {
+           background-color: white; border-collapse: collapse; border: 3px double black; padding: 2px 4px; text-align: center; margin: auto;
+        }
+        #avatar {
+            width: 100px; height: 100px; border-radius: 50px;
+        }
+        #formModif {
+            display: none;
+            flex-direction: column ;
+            width: 15%;
+            margin-left: 42.5%;
+            text-align: center;
+            flex-wrap: wrap;
+        }
+        @keyframes move {
+            from {opacity: 0;}
+            to {opacity: 1;}
+        }
+        #Imc{
+            display: none;
+        }
+   
+
+      
+    
+    </style>
+
+    <h1><%= message %></h1>
+    
+    <!-- Affichage des données utilisateur -->
+    <div><img id="avatar" src="<%= results.avatar %>"></div>
+    <div id="flexDiv">
+    <!-- Bouton de déconnection, renvoi à la page de login -->
+    <a href="/login"><input id="deco" name="" type="button" value="Déconnexion"></a>
+    
+    <!-- Bouton permettant à l'utilisateur de supprimer son compte -->
+    <form id="delete" method="post" action="/deleteUser">
+        <input type="hidden" id="id" name="id" value="<%= results.id_user %>">
+        <button>delete</button>
+    </form>
+    
+    <!-- Bouton permettant au client de modifier ses informations -->
+    <input id="modif" type="button" value="Modifier mon profil">
+    
+    <!-- Bouton pour accéder aux séances de l'utilisateur logués-->
+    <form id="showSeance" method="post" action="/seance">
+        <input type="hidden" id="id" name="id" value="<%= results.id_user %>"> 
+        <button>Mes séances</button>
+    </form>
+</div>
+
+    <!-- Données utilisateur -->
+    <p>Mon poids : <%= results.poids %>Kg</p>
+    <input type="hidden" id="poids" value="<%= results.poids %>"> 
+    <p>Ma taille : <%= results.taille %>M</p>
+    <input type="hidden" id="taille" value="<%= results.taille %>"> 
+    <p>Mon objectif : <%= results.objectif %>Kg</p>
+    <!-- Bouton enclenchant le calcul de l'IMC -->
+    <input id="button" type="button" value="get imc">
+    <!-- Paragraphe qui afficherat le résultat du calcul de l'IMC -->
+    <div id="imc"></div>
+        
+    <!-- Div de modification des données utilisateur (cachée par défaut) -->
+    <div>
+        <form id="formModif" method="post" action="/update">
+            <input type="hidden" id="id" name="id" value="<%= results.id_user %>"> 
+            <label>Nom : </label>
+            <input type="text" id="name" name="name" value="<%= results.name %>" required>
+            <label>Pseudo : </label>
+            <input type="text" id="pseudo" name="pseudo" value="<%= results.user_pseudo %>" required>
+            <label>Mot de passe : </label>
+            <input type="password" id="pass" name="pass" value="<%= results.pass %>" required>
+            <label>Prénom : </label>
+            <input type="text" id="prenom" name="prenom" value="<%= results.prenom %>" required>
+            <label>Téléphone : </label>
+            <input type="tel" id="tel" name="tel" value="<%= results.tel %>" required>
+            <label>Poids : </label>
+            <input type="number" step="0.01" id="poids" name="poids" value="<%= results.poids %>" required>
+            <label>Taille : </label>
+            <input type="number" step="0.01" id="taille" name="taille" value="<%= results.taille %>" required>
+            <label>Objectif : </label>
+            <input type="number" step="0.01" id="objectif" name="objectif" value="<%= results.objectif %>" required>
+            <label>Avatar : </label>
+            <input type="text" id="avatar1" name="avatar1" value="<%= results.avatar %>" required>
+            <button>Modifier</button>
+        </form>
+    </div>
+    
+    <!-- DIAGRAMMES A FAIRE -->
+    <!-- <div> -->
+        <!-- Diagramme circulaire affichant les activités effectuées par l'utilisateur -->
+        <!-- <canvas id="diagramme-activite"></canvas> -->
+    <!-- </div> -->
+      
+    <!-- librairie pour faire des diagrammes -->
+    <!-- <script src="https://cdn.jsdelivr.net/npm/chart.js"><git reset --hard master@{"10 minutes ago"}/script> -->
+    
+    <script>
+        /* const diagrammeAct = document.getElementById('diagramme-activite');
+        
+        new Chart(diagrammeAct, {
+            type: 'doughnut',
+            radius: '50%',
+            data: {
+                labels: [
+                    'Red',
+                    'Blue',
+                    'Yellow'
+                ],
+                datasets: [{
+                    label: 'My First Dataset',
+                    data: [300, 50, 100],
+                    backgroundColor: [
+                    'rgb(255, 99, 132)',
+                    'rgb(54, 162, 235)',
+                    'rgb(255, 205, 86)'
+                    ],
+                    hoverOffset: 4
+                }]
+            }
+        }); */
+
+        // à la connexion, on récupère les données de l'utilisateur à enregistrer dans le cache
+        let user = <%- JSON.stringify(storage) %>;
+        // si l'utilisateur n'est PAS déjà loggé
+        if (user) { 
+            // on les envoie dans le session storage
+            sessionStorage.setItem('loggedIn', JSON.stringify(user)); 
+        }
+        
+        // event listener pour le calcul de l'IMC
+        button.addEventListener('click', () => {
+            let poids = document.getElementById('poids').value;
+            let taille = document.getElementById('taille').value;
+            let imc = document.getElementById('imc');
+            // calcul de l'IMC
+            let result = (poids / Math.pow(taille, 2)).toFixed(2);
+            // affichage de l'IMC
+            document.getElementById('imc').innerHTML = `IMC = ${result} <br>`
+            // image avec les classifications d'IMC
+            document.getElementById('imc').innerHTML += `<img id="schemaImc" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQr4bvZYaNENT3auaf6E5j8spRUBlbGVcgieA&usqp=CAU">` 
+            if (result < 18.5){
+                imc.style.color = 'darkgreen'
+            } else if (result >= 18.5 && result < 25 ){
+                imc.style.color = "limegreen"
+            } else if (result >= 25 && result < 30  ){
+                imc.style.color = "sandybrown"
+            } else if (result >= 30 && result < 35){
+                imc.style.color = "orange"
+            } else if (result >= 35 && result < 40){
+                imc.style.color = "darkorange"
+            } else {
+                imc.style.color = "red"
+            }
+        });
+
+        // à la déconnexion, on supprime les données dans le session storage
+        deco.addEventListener("click", ()=>{
+            sessionStorage.clear();
+                });
+
+        let form = document.getElementById('formModif');
+        // affiche/cache le formulaire de modification du profil au clic du bouton
+        modif.addEventListener('click', () => {
+            if (form.style.display === "flex"){
+                form.style.display = "none";
+            } else {
+                form.style.display = "flex";
+            }
+        });
+
+        let imc = document.getElementById('imc');
+        // affiche/cache l'IMC au clic du bouton
+        button.addEventListener('click', () => {
+            if (imc.style.display === "block"){
+                imc.style.display = "none";
+            } else {
+                imc.style.display = "block";
+            }
+        });
+     </script>
+                
+</body>
+</html>
