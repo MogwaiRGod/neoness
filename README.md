@@ -4,7 +4,7 @@ Plateforme de suivi des inscrits d'une salle de sport
 ----
 
 ### Auteurs
-Diane ([MogwaiRGod](https://github.com/MogwaiRGod)) et Michael ([killard95](https://github.com/killard95))
+Diane ([MogwaiRGod](https://github.com/MogwaiRGod)) et Michaël ([killard95](https://github.com/killard95))
 
 ### Technos
 
